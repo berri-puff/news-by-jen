@@ -8,10 +8,6 @@ const {
   topicData,
   userData,
 } = require("../db/data/test-data/index");
-const { expect } = require("@jest/globals");
-
-
-
 
 beforeEach(() => {
   return seed({ articleData, commentData, topicData, userData });
@@ -44,5 +40,4 @@ describe("/api/topics", () => {
         expect(body.msg).toBe('bad request')
     })
   })
-
 });
