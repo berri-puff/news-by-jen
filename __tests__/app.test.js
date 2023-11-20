@@ -32,12 +32,15 @@ describe("/api/topics", () => {
         });
       });
   });
-  test('ERROR: 400 when given an invalid pathway', ()=>{
-    return request(app)
-    .get('/api/not-news-address')
-    .expect(400)
-    .then(({body})=>{
-        expect(body.msg).toBe('bad request')
-    })
-  })
 });
+
+describe('Error Handling', ()=>{
+    test('ERROR: 400 when given an invalid pathway', ()=>{
+        return request(app)
+        .get('/api/not-news-address')
+        .expect(400)
+        .then(({body})=>{
+            expect(body.msg).toBe('bad request')
+        })
+      })
+})
