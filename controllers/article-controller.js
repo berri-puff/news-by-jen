@@ -5,4 +5,4 @@ exports.getsArticle = (req,res, next)=>{
     getArticleByID(article_id).then((foundArticle)=>{
         res.status(200).send({article: foundArticle})
     }).catch(next)
-}
+    }

@@ -8,7 +8,8 @@ const {
   topicData,
   userData,
 } = require("../db/data/test-data/index");
-const endpoints = require('../endpoints.json')
+const endpoints = require('../endpoints.json');
+
 
 
 
@@ -67,13 +68,14 @@ describe('/api/articles/:article_id', ()=>{
     .then(({body})=>{
       expect(body.article.article_id).toBe(3)
       expect(body.article).toMatchObject({
-        title: expect.any(String),
-        topic: expect.any(String),
-        author: expect.any(String),
-        body: expect.any(String),
-        created_at: expect.any(String),
-        votes: expect.any(Number),
-        article_img_url: expect.any(String)
+        title: "Eight pug gifs that remind me of mitch",
+        topic: "mitch",
+        author: "icellusedkars",
+        body: "some gifs",
+       created_at: expect.any(String),
+       votes: expect.any(Number),
+        article_img_url:
+          "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700"
       })
     })
   })
