@@ -8,6 +8,7 @@ const {
   topicData,
   userData,
 } = require("../db/data/test-data/index");
+const endpoints = require('../endpoints.json')
 
 
 
@@ -35,6 +36,17 @@ describe("/api/topics", () => {
       });
   });
 });
+
+describe('/api', ()=>{
+  test('GET 200: responds with available api endpoints', ()=>{
+    return request(app)
+    .get('/api')
+    .expect(200)
+    .then(({body})=>{
+      expect(body.endpoints).toEqual(endpoints)
+    })
+  })
+})
 
 describe('Error Handling', ()=>{
     test('ERROR: 400 when given an invalid pathway', ()=>{
