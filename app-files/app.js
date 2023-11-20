@@ -14,8 +14,11 @@ const app = express();
 app.get("/api/topics", getTopics);
 
 app.get("/api/articles/:article_id", getsArticle);
-app.get('/api', getsAllApi)
+
+app.get('/api', getsAllApi);
+
 app.all("*", invalidPaths);
+
 
 app.use(psqlErrors);
 app.use(customErrors);
