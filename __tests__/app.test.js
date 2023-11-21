@@ -9,7 +9,7 @@ const {
   userData,
 } = require("../db/data/test-data/index");
 const endpoints = require("../endpoints.json");
-const { expect } = require("@jest/globals");
+
 
 beforeEach(() => {
   return seed({ articleData, commentData, topicData, userData });
@@ -101,9 +101,9 @@ describe("/api/articles", () => {
       .get("/api/articles")
       .expect(200)
       .then((response) => {
-       const {articles} = response.body
+        const { articles } = response.body;
         expect(articles).toHaveLength(13);
-        expect(articles).toBeSortedBy('created_at', {descending: true})
+        expect(articles).toBeSortedBy("created_at", { descending: true });
         articles.forEach((piece) => {
           expect(piece).toMatchObject({
             article_id: expect.any(Number),
@@ -112,10 +112,33 @@ describe("/api/articles", () => {
             topic: expect.any(String),
             created_at: expect.any(String),
             votes: expect.any(Number),
-            article_img_url: expect.any(String)
+            article_img_url: expect.any(String),
           });
-          expect(piece.hasOwnProperty('body')).toBe(false)
-          expect(piece).hasOwnProperty('comment_count')
+          expect(piece.hasOwnProperty("body")).toBe(false);
+          expect(piece).hasOwnProperty("comment_count");
+        });
+      });
+  });
+});
+describe("api/articles/:article_id/comments", () => {
+  test("POST: 201 adds a new comment for an article", () => {
+    const newComment = {
+      username: "icellusedkars",
+      body: "Contents are not worth reading",
+    };
+    return request(app)
+      .post("/api/articles/7/comments")
+      .send(newComment)
+      .expect(201)
+      .then(({ body }) => {
+        const { comment } = body;
+        expect(comment).toMatchObject({
+          comment_id: 19,
+          body: "Contents are not worth reading",
+          article_id: 7,
+          author: "icellusedkars",
+          votes: 0,
+          created_at: expect.any(String),
         });
       });
   });

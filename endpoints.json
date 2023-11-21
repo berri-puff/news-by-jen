@@ -42,5 +42,18 @@
         }
       ]
     }
+  },
+  "POST /api/articles/:article_id/comments" : {
+    "description": "adds a new comment to the article ID provided",
+    "queries" : [],
+    "exampleCommentToBeAdded" : { "username" : "icellusedkars", "body": "an opinion"},
+    "exampleResponse" : {
+      "comment_id": 19,
+      "body" : "an opinion",
+      "article_id": 7,
+      "author": "icellusedkars",
+      "votes": 0,
+      "created_at" : 1604394720000
+    }
   }
 }
