@@ -11,6 +11,9 @@ const {
 const endpoints = require("../endpoints.json");
 
 
+
+
+
 beforeEach(() => {
   return seed({ articleData, commentData, topicData, userData });
 });
@@ -142,4 +145,25 @@ describe("api/articles/:article_id/comments", () => {
         });
       });
   });
+  test('ERROR: 400 responds with an error when the request body does not have all the required information', ()=>{
+    const invalidComment = { username: 'rogersop'}
+    return request(app)
+    .post('/api/articles/5/comments')
+    .send(invalidComment)
+    .expect(400).then(({body}) =>{
+      expect(body.msg).toBe('Bad Request')
+    })
+  })
+  test('ERROR: 404 responds with an error message when comment is being added to a valid but non-existent article', ()=>{
+    const newComment = {
+      username: "icellusedkars",
+      body: "Contents are not worth reading",
+    };
+    return request(app)
+    .post('/api/articles/46/comments')
+    .send(newComment)
+    .expect(404).then(({body})=>{
+      expect(body.msg).toBe('Not Found')
+    })
+  })
 });

@@ -1,3 +1,6 @@
+const db = require('../connection.js')
+const format = require('pg-format')
+
 exports.convertTimestampToDate = ({ created_at, ...otherProperties }) => {
   if (!created_at) return { ...otherProperties };
   return { created_at: new Date(created_at), ...otherProperties };
@@ -18,5 +21,13 @@ exports.formatComments = (comments, idLookup) => {
       author: created_by,
       ...this.convertTimestampToDate(restOfComment),
     };
+  });
+};
+exports.checkArticleID = (table, column, value) => {
+  const queryString = format(`SELECT * FROM %I WHERE %I = $1`, table, column);
+  return db.query(queryString, [value]).then(({ rows }) => {
+    if (!rows.length) {
+      return Promise.reject({ status: 404, msg: "Not Found" });
+    }
   });
 };

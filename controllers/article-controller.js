@@ -1,3 +1,5 @@
+
+const { checkArticleID } = require("../db/seeds/utils");
 const {
   getArticleByID,
   selectAllArticles,
@@ -19,11 +21,11 @@ exports.getsAllArticles = (req, res, next) => {
   });
 };
 
-exports.postsNewComment = (req,res,next) =>{
-    const {article_id} = req.params
-    const commentToAdd = req.body
-
-    insertsNewComment(article_id, commentToAdd).then((addedComment)=>{
-        res.status(201).send({comment: addedComment})
-    })
-}
+exports.postsNewComment = (req, res, next) => {
+  const { article_id } = req.params;
+  const commentToAdd = req.body;
+const addCommentPromise = [checkArticleID('articles', 'article_id', article_id), insertsNewComment(article_id, commentToAdd)]
+  Promise.all(addCommentPromise).then((addedComment) => {
+    res.status(201).send({ comment: addedComment[1] });
+  }).catch(next)
+};
