@@ -9,7 +9,7 @@ const {
   userData,
 } = require("../db/data/test-data/index");
 const endpoints = require("../endpoints.json");
-const { expect } = require("@jest/globals");
+
 
 
 beforeEach(() => {
@@ -171,7 +171,7 @@ describe("GET: /api/articles/:acrticle_id/comments", () => {
   })
 });
 
-describe(" Adds new Comment to: api/articles/:article_id/comments", () => {
+describe("Post: api/articles/:article_id/comments", () => {
   test("POST: 201 adds a new comment for an article", () => {
     const newComment = {
       username: "icellusedkars",
@@ -228,3 +228,27 @@ describe(" Adds new Comment to: api/articles/:article_id/comments", () => {
     })
   })
 });
+
+describe.only('Delete: Comments', ()=>{
+  test('DELETE: 204, deletes the comment by id', ()=>{
+    return request(app)
+    .delete('/api/comments/7')
+    .expect(204)
+  })
+  test('ERROR: 404 responds with an error when comment_id is non-existent', ()=>{
+    return request(app)
+    .delete('/api/comments/677')
+    .expect(404)
+    .then(({body})=>{
+    expect(body.msg).toBe('Not Found')
+    })
+  })
+  test('ERROR: 400 responds with an error with endpoint is invalid', ()=>{
+    return request(app)
+    .delete('/api/comments/snakes')
+    .expect(400)
+    .then(({body})=>{
+    expect(body.msg).toBe('Bad Request')
+    })
+  })
+})
