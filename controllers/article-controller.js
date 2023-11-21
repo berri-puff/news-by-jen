@@ -39,4 +39,5 @@ const newVote = req.body
 updatesVotes(article_id, newVote).then((updatedArticle) =>{
     res.status(200).send({article: updatedArticle})
 })
+.catch(next)
 }

@@ -11,8 +11,6 @@ const {
 const endpoints = require("../endpoints.json");
 
 
-
-
 beforeEach(() => {
   return seed({ articleData, commentData, topicData, userData });
 });
@@ -84,7 +82,7 @@ describe("GET /api/articles/:article_id", () => {
       .get("/api/articles/89")
       .expect(404)
       .then(({ body }) => {
-        expect(body.msg).toBe("no article with this ID");
+        expect(body.msg).toBe("Not Found");
       });
   });
   test("ERROR: 400 responds with an error when given an invalid id", () => {
@@ -171,8 +169,8 @@ describe("GET /api/articles/:acrticle_id/comments", () => {
   })
 });
 
-describe.only('PATCH articles', ()=>{
-  test('PATCH: 200, patches the number of votes on the selected article (increase)', ()=>{
+describe('PATCH articles', ()=>{
+  test('PATCH: 200, increases vote by article_id', ()=>{
     const newVote = {inc_votes: 5}
     return request(app)
     .patch('/api/articles/10')
@@ -190,6 +188,67 @@ describe.only('PATCH articles', ()=>{
         votes: 5,
         article_img_url: 'https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700'
       })
+    })
+  })
+  test('PATCH: 200 decreases the vote by article ID', ()=>{
+    const newVote = {inc_votes: -4}
+    return request(app)
+    .patch('/api/articles/1')
+    .send(newVote)
+    .expect(200)
+    .then((response)=>{
+      const {article} = response.body
+      expect(article).toMatchObject({
+        article_id : 1,
+        title: "Living in the shadow of a great man",
+        topic: "mitch",
+        author: "butter_bridge",
+        body: "I find this existence challenging",
+        created_at: expect.any(String),
+        votes: 96,
+        article_img_url:
+          "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700"
+      })
+    })
+  })
+  test('ERROR: 404 responds with an error when trying to decrease the vote to non-existing article (decrease)', ()=>{
+    const newVote = {inc_votes: -4}
+    return request(app)
+    .patch('/api/articles/45')
+    .send(newVote)
+    .expect(404)
+    .then(({body})=>{
+      expect(body.msg).toBe('Not Found')
+    })
+  })
+  test('ERROR: 404 responds with an error when trying to increase vote to a non-existing article ', ()=>{
+    const newVote = {inc_votes: 45}
+    return request(app)
+    .patch('/api/articles/45')
+    .send(newVote)
+    .expect(404)
+    .then(({body})=>{
+      expect(body.msg).toBe('Not Found')
+    })
+  })
+  test('ERROR: 400 responds with error if patching to an invalid path', ()=>{
+    const newVote = {inc_vote: 45}
+    return request(app)
+    .patch('/api/articles/wow')
+    .send(newVote)
+    .expect(400)
+    .then(({body})=>{
+      expect(body.msg).toBe('Bad Request')
+    })
+  })
+  test('ERROR: 400, responds with an error when vote is not a number', ()=>{
+    const newVote = {inc_vote: 'six'}
+    return request(app)
+    .patch('/api/articles/wow')
+    .send(newVote)
+    .expect(400)
+    .then(({body})=>{
+      expect(body.msg).toBe('Bad Request')
     })
   })
 })
