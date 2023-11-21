@@ -229,7 +229,7 @@ describe("Post: api/articles/:article_id/comments", () => {
   })
 });
 
-describe.only('Delete: Comments', ()=>{
+describe('Delete: Comments', ()=>{
   test('DELETE: 204, deletes the comment by id', ()=>{
     return request(app)
     .delete('/api/comments/7')
