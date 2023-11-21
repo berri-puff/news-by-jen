@@ -171,7 +171,7 @@ describe("GET: /api/articles/:acrticle_id/comments", () => {
   })
 });
 
-describe.only(" Adds new Comment to: api/articles/:article_id/comments", () => {
+describe(" Adds new Comment to: api/articles/:article_id/comments", () => {
   test("POST: 201 adds a new comment for an article", () => {
     const newComment = {
       username: "icellusedkars",
