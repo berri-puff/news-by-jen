@@ -15,3 +15,10 @@ exports.selectAllArticles = ()=>{
     return rows
   })
 }
+
+exports.selectCommentByArticleID = (article_id)=>{
+ return db.query(`SELECT articles.article_id, comments.author, comments.created_at, comments.votes, comments.comment_id, comments.body FROM articles LEFT JOIN comments ON articles.article_id = comments.article_id WHERE comments.article_id = $1 ORDER BY comments.created_at`, [article_id]).then(({rows})=>{
+  return rows
+ })
+}
+
