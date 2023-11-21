@@ -116,12 +116,13 @@ describe(" GET /api/articles", () => {
           });
           expect(piece.hasOwnProperty("body")).toBe(false);
           expect(piece).hasOwnProperty("comment_count");
+
         });
       });
   });
 });
 
-describe("GET /api/articles/:acrticle_id/comments", () => {
+describe("GET: /api/articles/:article_id/comments", () => {
   test("GET: 200, responds with an array of comments in ascending order by the article_id", () => {
     return request(app)
       .get("/api/articles/5/comments")
@@ -162,6 +163,64 @@ describe("GET /api/articles/:acrticle_id/comments", () => {
   test('ERROR: 400 responds with error message when trying to access by an invalid endpoint', ()=>{
     return request(app)
     .get('/api/articles/invalid/comments').
+    expect(400)
+    .then(({body})=>{
+      expect(body.msg).toBe('Bad Request')
+    })
+  })
+});
+
+describe(" Adds new Comment to: api/articles/:article_id/comments", () => {
+  test("POST: 201 adds a new comment for an article", () => {
+    const newComment = {
+      username: "icellusedkars",
+      body: "Contents are not worth reading",
+    };
+    return request(app)
+      .post("/api/articles/7/comments")
+      .send(newComment)
+      .expect(201)
+      .then(({ body }) => {
+        const { comment } = body;
+        expect(comment).toMatchObject({
+          comment_id: 19,
+          body: "Contents are not worth reading",
+          article_id: 7,
+          author: "icellusedkars",
+          votes: 0,
+          created_at: expect.any(String),
+        });
+      });
+  });
+  test('ERROR: 400 responds with an error when the request body does not have all the required information', ()=>{
+    const invalidComment = { username: 'rogersop'}
+    return request(app)
+    .post('/api/articles/5/comments')
+    .send(invalidComment)
+    .expect(400).then(({body}) =>{
+      expect(body.msg).toBe('Bad Request')
+    })
+  })
+  test('ERROR: 404 responds with an error message when comment is being added to a valid but non-existent article', ()=>{
+    const newComment = {
+      username: "icellusedkars",
+      body: "Contents are not worth reading",
+    };
+    return request(app)
+    .post('/api/articles/46/comments')
+    .send(newComment)
+    .expect(404).then(({body})=>{
+      expect(body.msg).toBe('Not Found')
+    })
+  })
+  test('ERROR: 400 responds with an error message when trying to add comment to an invalid endpoint', ()=>{
+    const newComment = {
+      username: "icellusedkars",
+      body: "Contents are not worth reading",
+    };
+    return request(app)
+    .post('/api/articles/mouse/comments')
+    .send(newComment).
     expect(400)
     .then(({body})=>{
       expect(body.msg).toBe('Bad Request')
