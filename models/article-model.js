@@ -21,4 +21,10 @@ exports.selectCommentByArticleID = (article_id)=>{
   return rows
  })
 }
+exports.updatesVotes = (article_id, newVote)=>{
+  const {inc_votes} = newVote
+return db.query(`UPDATE articles SET votes = $1 WHERE article_id = $2 RETURNING *`, [inc_votes, article_id]).then(({rows})=>{
+  return rows[0]
+})
+}
 

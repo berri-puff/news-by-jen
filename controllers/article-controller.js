@@ -3,6 +3,7 @@ const {
   getArticleByID,
   selectAllArticles,
   selectCommentByArticleID,
+  updatesVotes,
 } = require("../models/article-model");
 
 exports.getsArticle = (req, res, next) => {
@@ -31,3 +32,11 @@ exports.getArticleComments = (req, res, next) => {
     })
     .catch(next);
 };
+
+exports.patchArticleVote = (req,res,next) =>{
+const {article_id} = req.params
+const newVote = req.body
+updatesVotes(article_id, newVote).then((updatedArticle) =>{
+    res.status(200).send({article: updatedArticle})
+})
+}

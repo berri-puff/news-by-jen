@@ -60,7 +60,7 @@ describe("Error Handling", () => {
   });
 });
 
-describe("/api/articles/:article_id", () => {
+describe("GET /api/articles/:article_id", () => {
   test("GET: 200 responds with the selected article when given a valid id", () => {
     return request(app)
       .get("/api/articles/3")
@@ -97,7 +97,7 @@ describe("/api/articles/:article_id", () => {
   });
 });
 
-describe("/api/articles", () => {
+describe(" GET /api/articles", () => {
   test("GET: 200 retrieves all the articles", () => {
     return request(app)
       .get("/api/articles")
@@ -123,7 +123,7 @@ describe("/api/articles", () => {
   });
 });
 
-describe.only("/api/articles/:acrticle_id/comments", () => {
+describe("GET /api/articles/:acrticle_id/comments", () => {
   test("GET: 200, responds with an array of comments in ascending order by the article_id", () => {
     return request(app)
       .get("/api/articles/5/comments")
@@ -170,3 +170,26 @@ describe.only("/api/articles/:acrticle_id/comments", () => {
     })
   })
 });
+
+describe.only('PATCH articles', ()=>{
+  test('PATCH: 200, patches the number of votes on the selected article (increase)', ()=>{
+    const newVote = {inc_votes: 5}
+    return request(app)
+    .patch('/api/articles/10')
+    .send(newVote)
+    .expect(200)
+    .then((response)=>{
+      const {article} = response.body
+      expect(article).toMatchObject({
+        article_id : 10,
+        title: 'Seven inspirational thought leaders from Manchester UK',
+        topic: 'mitch',
+        author: 'rogersop',
+        body: "Who are we kidding, there is only one, and it's Mitch!",
+        created_at : expect.any(String),
+        votes: 5,
+        article_img_url: 'https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700'
+      })
+    })
+  })
+})
