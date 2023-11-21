@@ -114,6 +114,7 @@ describe("/api/articles", () => {
             votes: expect.any(Number),
             article_img_url: expect.any(String)
           });
+          expect(piece.hasOwnProperty('body')).toBe(false)
           expect(piece).hasOwnProperty('comment_count')
         });
       });
