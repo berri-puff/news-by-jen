@@ -251,4 +251,14 @@ describe('PATCH articles', ()=>{
       expect(body.msg).toBe('Bad Request')
     })
   })
+  test('ERROR: 400, responds with an error when no information has been given', ()=>{
+    const newVote = {}
+    return request(app)
+    .patch('/api/articles/wow')
+    .send(newVote)
+    .expect(400)
+    .then(({body})=>{
+      expect(body.msg).toBe('Bad Request')
+    })
+  })
 })
