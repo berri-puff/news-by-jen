@@ -16,6 +16,14 @@ exports.selectAllArticles = ()=>{
   })
 }
 
+exports.selectCommentByArticleID = (article_id)=>{
+ return db.query(`SELECT articles.article_id, comments.author, comments.created_at, comments.votes, comments.comment_id, comments.body FROM articles LEFT JOIN comments ON articles.article_id = comments.article_id WHERE comments.article_id = $1 ORDER BY comments.created_at`, [article_id]).then(({rows})=>{
+  return rows
+ })
+}
+
+
+
 exports.insertsNewComment = (article_id, commentToAdd) =>{
   const {username, body} = commentToAdd
 return db.query(`INSERT INTO comments (author, body, article_id) VALUES ($1,$2,$3) RETURNING *`, [username, body, article_id]).then(({rows})=>{

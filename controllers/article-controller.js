@@ -1,8 +1,8 @@
-
 const { checkArticleID } = require("../db/seeds/utils");
 const {
   getArticleByID,
   selectAllArticles,
+  selectCommentByArticleID,
   insertsNewComment,
 } = require("../models/article-model");
 
@@ -19,6 +19,18 @@ exports.getsAllArticles = (req, res, next) => {
   selectAllArticles().then((allArticles) => {
     res.status(200).send({ articles: allArticles });
   });
+};
+
+exports.getArticleComments = (req, res, next) => {
+  const { article_id } = req.params;
+
+  checkArticleID("articles", "article_id", article_id)
+    .then(() => {
+      selectCommentByArticleID(article_id).then((relatedComments) => {
+        res.status(200).send({ comments: relatedComments });
+      });
+    })
+    .catch(next);
 };
 
 exports.postsNewComment = (req, res, next) => {

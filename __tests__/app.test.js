@@ -9,9 +9,7 @@ const {
   userData,
 } = require("../db/data/test-data/index");
 const endpoints = require("../endpoints.json");
-
-
-
+const { expect } = require("@jest/globals");
 
 
 beforeEach(() => {
@@ -56,7 +54,7 @@ describe("Error Handling", () => {
       .get("/api/not-news-address")
       .expect(400)
       .then(({ body }) => {
-        expect(body.msg).toBe("bad request");
+        expect(body.msg).toBe("Bad Request");
       });
   });
 });
@@ -119,11 +117,61 @@ describe("/api/articles", () => {
           });
           expect(piece.hasOwnProperty("body")).toBe(false);
           expect(piece).hasOwnProperty("comment_count");
+
         });
       });
   });
 });
-describe("api/articles/:article_id/comments", () => {
+
+describe("GET: /api/articles/:acrticle_id/comments", () => {
+  test("GET: 200, responds with an array of comments in ascending order by the article_id", () => {
+    return request(app)
+      .get("/api/articles/5/comments")
+      .expect(200)
+      .then((response) => {
+        const { comments } = response.body;
+        expect(comments).toBeSortedBy("created_at", { ascending: true });
+        expect(comments).toHaveLength(2);
+        comments.forEach((comment) => {
+          expect(comment.article_id).toBe(5);
+          expect(comment).toMatchObject({
+            author: expect.any(String),
+            created_at: expect.any(String),
+            votes: expect.any(Number),
+            comment_id: expect.any(Number),
+            body: expect.any(String),
+          });
+        });
+      });
+  });
+  test("ERROR: 404, responds with an error message when given a valid but non-exist article_id", () => {
+    return request(app)
+      .get("/api/articles/67/comments")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Not Found");
+      });
+  });
+  test('GET: 200 responds when an empty array when article_id exists but no comments has been made', ()=>{
+    return request(app)
+    .get('/api/articles/2/comments')
+    .expect(200)
+    .then(({body})=>{
+
+      expect(body.comments).toEqual([])
+    })
+  })
+  test('ERROR: 400 responds with error message when trying to access by an invalid endpoint', ()=>{
+    return request(app)
+    .get('/api/articles/invalid/comments').
+    expect(400)
+    .then(({body})=>{
+      expect(body.msg).toBe('Bad Request')
+    })
+  })
+});
+
+describe.only(" Adds new Comment to: api/articles/:article_id/comments", () => {
   test("POST: 201 adds a new comment for an article", () => {
     const newComment = {
       username: "icellusedkars",
@@ -164,6 +212,19 @@ describe("api/articles/:article_id/comments", () => {
     .send(newComment)
     .expect(404).then(({body})=>{
       expect(body.msg).toBe('Not Found')
+    })
+  })
+  test('ERROR: 400 responds with an error message when trying to add comment to an invalid endpoint', ()=>{
+    const newComment = {
+      username: "icellusedkars",
+      body: "Contents are not worth reading",
+    };
+    return request(app)
+    .post('/api/articles/mouse/comments')
+    .send(newComment).
+    expect(400)
+    .then(({body})=>{
+      expect(body.msg).toBe('Bad Request')
     })
   })
 });

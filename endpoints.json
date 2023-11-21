@@ -43,6 +43,22 @@
       ]
     }
   },
+  "GET /api/articles:acrticle_id/comments" : {
+    "description" : "serves an array containing all the comments by the selected article ID",
+    "queries": [],
+    "exampleResponse": {
+      "article" : [
+        {
+          "article_id" : 1,
+          "author": "butter_bridge",
+          "created_at": 1594329060000,
+          "votes": 100,
+          "comment_id": 2,
+          "body" : "The beautiful thing about treasure is that it exists. Got to find out what kind of sheets these are; not cotton, not rayon, silky."
+        }
+      ]
+    }
+  },
   "POST /api/articles/:article_id/comments" : {
     "description": "adds a new comment to the article ID provided",
     "queries" : [],

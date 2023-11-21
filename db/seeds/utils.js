@@ -1,5 +1,5 @@
-const db = require('../connection.js')
-const format = require('pg-format')
+const db = require("../connection.js");
+const format = require("pg-format");
 
 exports.convertTimestampToDate = ({ created_at, ...otherProperties }) => {
   if (!created_at) return { ...otherProperties };
@@ -23,6 +23,7 @@ exports.formatComments = (comments, idLookup) => {
     };
   });
 };
+
 exports.checkArticleID = (table, column, value) => {
   const queryString = format(`SELECT * FROM %I WHERE %I = $1`, table, column);
   return db.query(queryString, [value]).then(({ rows }) => {
