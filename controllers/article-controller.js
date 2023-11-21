@@ -3,6 +3,7 @@ const {
   getArticleByID,
   selectAllArticles,
   selectCommentByArticleID,
+  insertsNewComment,
 } = require("../models/article-model");
 
 exports.getsArticle = (req, res, next) => {
@@ -30,4 +31,13 @@ exports.getArticleComments = (req, res, next) => {
       });
     })
     .catch(next);
+};
+
+exports.postsNewComment = (req, res, next) => {
+  const { article_id } = req.params;
+  const commentToAdd = req.body;
+const addCommentPromise = [checkArticleID('articles', 'article_id', article_id), insertsNewComment(article_id, commentToAdd)]
+  Promise.all(addCommentPromise).then((addedComment) => {
+    res.status(201).send({ comment: addedComment[1] });
+  }).catch(next)
 };
