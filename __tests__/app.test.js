@@ -12,6 +12,7 @@ const endpoints = require("../endpoints.json");
 
 
 
+
 beforeEach(() => {
   return seed({ articleData, commentData, topicData, userData });
 });
@@ -54,7 +55,7 @@ describe("Error Handling", () => {
       .get("/api/not-news-address")
       .expect(400)
       .then(({ body }) => {
-        expect(body.msg).toBe("bad request");
+        expect(body.msg).toBe("Bad Request");
       });
   });
 });
@@ -122,7 +123,7 @@ describe("/api/articles", () => {
   });
 });
 
-describe("/api/articles/:acrticle_id/comments", () => {
+describe.only("/api/articles/:acrticle_id/comments", () => {
   test("GET: 200, responds with an array of comments in ascending order by the article_id", () => {
     return request(app)
       .get("/api/articles/5/comments")
@@ -158,6 +159,14 @@ describe("/api/articles/:acrticle_id/comments", () => {
     .then(({body})=>{
 
       expect(body.comments).toEqual([])
+    })
+  })
+  test('ERROR: 400 responds with error message when trying to access by an invalid endpoint', ()=>{
+    return request(app)
+    .get('/api/articles/invalid/comments').
+    expect(400)
+    .then(({body})=>{
+      expect(body.msg).toBe('Bad Request')
     })
   })
 });
