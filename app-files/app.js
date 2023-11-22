@@ -15,20 +15,19 @@ const app = express();
 app.use(express.json())
 
 app.get("/api/topics", getTopics);
-
 app.get("/api/articles/:article_id", getsArticle);
 app.get('/api/articles/:article_id/comments', getArticleComments)
 app.get('/api', getsAllApi);
 app.get('/api/articles', getsAllArticles);
-app.patch('/api/articles/:article_id', patchArticleVote)
 app.get('/api/users', getsUsers)
+
+app.patch('/api/articles/:article_id', patchArticleVote)
 
 app.post('/api/articles/:article_id/comments', postsNewComment)
 
 app.delete('/api/comments/:comment_id', deletesComment)
 
 app.all("*", invalidPaths);
-
 
 app.use(psqlErrors);
 app.use(customErrors);

@@ -11,6 +11,7 @@ const {
 const endpoints = require("../endpoints.json");
 
 
+
 beforeEach(() => {
   return seed({ articleData, commentData, topicData, userData });
 });
@@ -335,7 +336,7 @@ describe('Delete: Comments', ()=>{
   })
 })
 
-describe.only('GET users', ()=>{
+describe('GET users', ()=>{
   test('GET: 200, responds with an array of all users', ()=>{
     return request(app)
     .get('/api/users')
