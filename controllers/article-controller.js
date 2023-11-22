@@ -17,9 +17,12 @@ exports.getsArticle = (req, res, next) => {
 };
 
 exports.getsAllArticles = (req, res, next) => {
-  selectAllArticles().then((allArticles) => {
+  const topic = req.query
+  selectAllArticles(topic).then((allArticles) => {
     res.status(200).send({ articles: allArticles });
-  });
+  }).catch((err)=>{
+    console.log(err)
+  })
 };
 
 exports.getArticleComments = (req, res, next) => {
@@ -49,3 +52,4 @@ exports.patchArticleVote = (req,res,next) =>{
     })
     .catch(next)
     }
+

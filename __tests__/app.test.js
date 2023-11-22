@@ -121,6 +121,28 @@ describe(" GET /api/articles", () => {
         });
       });
   });
+  test('QUERY: 200 responds with only relevent articles as per query request',()=>{
+    return request(app)
+    .get('/api/articles?topic=mitch')
+    .expect(200)
+    .then((response)=>{
+      const {articles} = response.body
+      expect(articles).toHaveLength(12)
+      articles.forEach((piece) => {
+        expect(piece).toMatchObject({
+          article_id: expect.any(Number),
+          author: expect.any(String),
+          title: expect.any(String),
+          topic: "mitch",
+          created_at: expect.any(String),
+          votes: expect.any(Number),
+          article_img_url: expect.any(String),
+        });
+        expect(piece.hasOwnProperty("body")).toBe(false);
+        expect(piece).hasOwnProperty("comment_count");
+      });
+    })
+  })
 });
 
 describe("GET: /api/articles/:article_id/comments", () => {
