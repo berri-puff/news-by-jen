@@ -280,16 +280,6 @@ describe('PATCH articles', ()=>{
       expect(body.msg).toBe('Not Found')
     })
   })
-  test('ERROR: 404 responds with an error when trying to increase vote to a non-existing article ', ()=>{
-    const newVote = {inc_votes: 45}
-    return request(app)
-    .patch('/api/articles/45')
-    .send(newVote)
-    .expect(404)
-    .then(({body})=>{
-      expect(body.msg).toBe('Not Found')
-    })
-  })
   test('ERROR: 400 responds with error if patching to an invalid path', ()=>{
     const newVote = {inc_vote: 45}
     return request(app)
