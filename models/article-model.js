@@ -13,7 +13,6 @@ exports.getArticleByID = (article_id) => {
 exports.selectAllArticles = (topic, validTopics) => {
   let queryString = `SELECT articles.article_id, articles.author, articles.title, articles.topic, articles.created_at, articles.votes, articles.article_img_url, COUNT(comments.body) AS comment_counts FROM articles LEFT JOIN comments ON articles.article_id = comments.article_id `;
   if (topic && !validTopics.includes(topic)) {
-    console.log(topic)
     return Promise.reject({ status: 404, msg: "Not Found" });
   } else if (topic && validTopics.includes(topic)) {
     queryString += `WHERE topic = $1 GROUP BY articles.article_id ORDER BY articles.created_at DESC`;

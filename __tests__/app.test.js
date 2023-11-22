@@ -98,7 +98,7 @@ describe("GET /api/articles/:article_id", () => {
   });
 });
 
-describe.only(" GET /api/articles", () => {
+describe(" GET /api/articles", () => {
   test("GET: 200 retrieves all the articles", () => {
     return request(app)
       .get("/api/articles")
