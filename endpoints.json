@@ -71,5 +71,10 @@
       "votes": 0,
       "created_at" : 1604394720000
     }
+  },
+  "DELETE /api/comments/:comment_id":{
+    "description": "deletes a selected comment by their ID, returns with nothing",
+    "queries": [],
+    "exampleResponse" : {}
   }
 }
