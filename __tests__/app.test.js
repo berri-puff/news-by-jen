@@ -58,7 +58,7 @@ describe("Error Handling", () => {
   });
 });
 
-describe("/api/articles/:article_id", () => {
+describe("GET /api/articles/:article_id", () => {
   test("GET: 200 responds with the selected article when given a valid id", () => {
     return request(app)
       .get("/api/articles/3")
@@ -95,7 +95,7 @@ describe("/api/articles/:article_id", () => {
   });
 });
 
-describe("/api/articles", () => {
+describe(" GET /api/articles", () => {
   test("GET: 200 retrieves all the articles", () => {
     return request(app)
       .get("/api/articles")
@@ -122,7 +122,7 @@ describe("/api/articles", () => {
   });
 });
 
-describe("GET: /api/articles/:acrticle_id/comments", () => {
+describe("GET: /api/articles/:article_id/comments", () => {
   test("GET: 200, responds with an array of comments in ascending order by the article_id", () => {
     return request(app)
       .get("/api/articles/5/comments")
@@ -228,6 +228,89 @@ describe("Post: api/articles/:article_id/comments", () => {
   })
 });
 
+describe('PATCH articles', ()=>{
+  test('PATCH: 200, increases vote by article_id', ()=>{
+    const newVote = {inc_votes: 5}
+    return request(app)
+    .patch('/api/articles/10')
+    .send(newVote)
+    .expect(200)
+    .then((response)=>{
+      const {article} = response.body
+      expect(article).toMatchObject({
+        article_id : 10,
+        title: 'Seven inspirational thought leaders from Manchester UK',
+        topic: 'mitch',
+        author: 'rogersop',
+        body: "Who are we kidding, there is only one, and it's Mitch!",
+        created_at : expect.any(String),
+        votes: 5,
+        article_img_url: 'https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700'
+      })
+    })
+  })
+  test('PATCH: 200 decreases the vote by article ID', ()=>{
+    const newVote = {inc_votes: -4}
+    return request(app)
+    .patch('/api/articles/1')
+    .send(newVote)
+    .expect(200)
+    .then((response)=>{
+      const {article} = response.body
+      expect(article).toMatchObject({
+        article_id : 1,
+        title: "Living in the shadow of a great man",
+        topic: "mitch",
+        author: "butter_bridge",
+        body: "I find this existence challenging",
+        created_at: expect.any(String),
+        votes: 96,
+        article_img_url:
+          "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700"
+      })
+    })
+  })
+  test('ERROR: 404 responds with an error when trying to decrease the vote to non-existing article (decrease)', ()=>{
+    const newVote = {inc_votes: -4}
+    return request(app)
+    .patch('/api/articles/45')
+    .send(newVote)
+    .expect(404)
+    .then(({body})=>{
+      expect(body.msg).toBe('Not Found')
+    })
+  })
+  test('ERROR: 400 responds with error if patching to an invalid path', ()=>{
+    const newVote = {inc_vote: 45}
+    return request(app)
+    .patch('/api/articles/wow')
+    .send(newVote)
+    .expect(400)
+    .then(({body})=>{
+      expect(body.msg).toBe('Bad Request')
+    })
+  })
+  test('ERROR: 400, responds with an error when vote is not a number', ()=>{
+    const newVote = {inc_vote: 'six'}
+    return request(app)
+    .patch('/api/articles/1')
+    .send(newVote)
+    .expect(400)
+    .then(({body})=>{
+      expect(body.msg).toBe('Bad Request')
+    })
+  })
+  test('ERROR: 400, responds with an error when no information has been given', ()=>{
+    const newVote = {}
+    return request(app)
+    .patch('/api/articles/4')
+    .send(newVote)
+    .expect(400)
+    .then(({body})=>{
+      expect(body.msg).toBe('Bad Request')
+    })
+  })
+})
 describe('Delete: Comments', ()=>{
   test('DELETE: 204, deletes the comment by id', ()=>{
     return request(app)
