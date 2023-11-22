@@ -11,7 +11,6 @@ const {
 const endpoints = require("../endpoints.json");
 
 
-
 beforeEach(() => {
   return seed({ articleData, commentData, topicData, userData });
 });
@@ -249,6 +248,25 @@ describe('Delete: Comments', ()=>{
     .expect(400)
     .then(({body})=>{
     expect(body.msg).toBe('Bad Request')
+    })
+  })
+})
+
+describe.only('GET users', ()=>{
+  test('GET: 200, responds with an array of all users', ()=>{
+    return request(app)
+    .get('/api/users')
+    .expect(200)
+    .then((response)=>{
+      const {users} = response.body
+      expect(users).toHaveLength(4)
+      users.forEach((user)=>{
+        expect(user).toMatchObject({
+          username: expect.any(String),
+          name: expect.any(String),
+          avatar_url:  expect.any(String)
+        })
+      })
     })
   })
 })
