@@ -12,6 +12,8 @@ const endpoints = require("../endpoints.json");
 
 
 
+
+
 beforeEach(() => {
   return seed({ articleData, commentData, topicData, userData });
 });
@@ -96,7 +98,7 @@ describe("GET /api/articles/:article_id", () => {
   });
 });
 
-describe(" GET /api/articles", () => {
+describe.only(" GET /api/articles", () => {
   test("GET: 200 retrieves all the articles", () => {
     return request(app)
       .get("/api/articles")
@@ -121,19 +123,19 @@ describe(" GET /api/articles", () => {
         });
       });
   });
-  test('QUERY: 200 responds with only relevent articles as per query request',()=>{
+  test('QUERY: 200 responds with only the relevent articles as per query request',()=>{
     return request(app)
-    .get('/api/articles?topic=mitch')
+    .get('/api/articles?topic=cats')
     .expect(200)
     .then((response)=>{
       const {articles} = response.body
-      expect(articles).toHaveLength(12)
+      expect(articles).toHaveLength(1)
       articles.forEach((piece) => {
         expect(piece).toMatchObject({
           article_id: expect.any(Number),
           author: expect.any(String),
           title: expect.any(String),
-          topic: "mitch",
+          topic: "cats",
           created_at: expect.any(String),
           votes: expect.any(Number),
           article_img_url: expect.any(String),
@@ -143,6 +145,23 @@ describe(" GET /api/articles", () => {
       });
     })
   })
+  test('QUERY: 200 returns an empty array if there is no articles but topic exists', ()=>{
+    return request(app)
+    .get('/api/articles?topic=paper')
+    .expect(200)
+    .then(({body})=>{
+      expect(body.articles).toEqual([])
+    })
+  })
+  test('ERROR: 404 responds with an error message when query topic does not exist', ()=>{
+    return request(app)
+    .get('/api/articles?topic=dogs')
+    .expect(404)
+    .then(({body})=>{
+      expect(body.msg).toBe('Not Found')
+    })
+  })
+
 });
 
 describe("GET: /api/articles/:article_id/comments", () => {

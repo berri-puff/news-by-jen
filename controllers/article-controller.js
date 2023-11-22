@@ -1,4 +1,4 @@
-const { checkArticleID } = require("../db/seeds/utils");
+const { checkArticle } = require("../db/seeds/utils");
 const {
   getArticleByID,
   selectAllArticles,
@@ -6,6 +6,7 @@ const {
   insertsNewComment,
   updatesVotes,
 } = require("../models/article-model");
+const { selectsAllTopics } = require("../models/topic-model");
 
 exports.getsArticle = (req, res, next) => {
   const { article_id } = req.params;
@@ -17,18 +18,27 @@ exports.getsArticle = (req, res, next) => {
 };
 
 exports.getsAllArticles = (req, res, next) => {
-  const topic = req.query
-  selectAllArticles(topic).then((allArticles) => {
-    res.status(200).send({ articles: allArticles });
-  }).catch((err)=>{
-    console.log(err)
-  })
+  const { topic } = req.query;
+  selectsAllTopics()
+    .then((topics) => {
+      const validTopics = topics.map((topic) => {
+        return topic.slug;
+      });
+      return validTopics;
+    })
+    .then((validTopics) => {
+      selectAllArticles(topic, validTopics).then((allArticles) => {
+      res.status(200).send({ articles: allArticles });
+    }) .catch(next);
+    })
+    
+   
 };
 
 exports.getArticleComments = (req, res, next) => {
   const { article_id } = req.params;
 
-  checkArticleID("articles", "article_id", article_id)
+  checkArticle("articles", "article_id", article_id)
     .then(() => {
       selectCommentByArticleID(article_id).then((relatedComments) => {
         res.status(200).send({ comments: relatedComments });
@@ -39,17 +49,19 @@ exports.getArticleComments = (req, res, next) => {
 exports.postsNewComment = (req, res, next) => {
   const { article_id } = req.params;
   const commentToAdd = req.body;
-insertsNewComment(article_id, commentToAdd).then((addedComment) => {
-    res.status(201).send({ comment: addedComment});
-  }).catch(next)
+  insertsNewComment(article_id, commentToAdd)
+    .then((addedComment) => {
+      res.status(201).send({ comment: addedComment });
+    })
+    .catch(next);
 };
 
-exports.patchArticleVote = (req,res,next) =>{
-    const {article_id} = req.params
-    const newVote = req.body
-    updatesVotes(article_id, newVote).then((updatedArticle) =>{
-        res.status(200).send({article: updatedArticle})
+exports.patchArticleVote = (req, res, next) => {
+  const { article_id } = req.params;
+  const newVote = req.body;
+  updatesVotes(article_id, newVote)
+    .then((updatedArticle) => {
+      res.status(200).send({ article: updatedArticle });
     })
-    .catch(next)
-    }
-
+    .catch(next);
+};
