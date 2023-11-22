@@ -72,9 +72,22 @@
       "created_at" : 1604394720000
     }
   },
+  "PATCH /api/articles/:article_id/comments" : {
+    "description": "serves an array with an votes updates on a selected article",
+    "queries" : [],
+    "exampleCommentToBeAdded" : { "inc_votes" : 5},
+    "exampleResponse" : {
+      "comment_id": 19,
+      "body" : "an opinion",
+      "article_id": 7,
+      "author": "icellusedkars",
+      "votes": 5,
+      "created_at" : 1604394720000
+    }
+  },
   "DELETE /api/comments/:comment_id":{
     "description": "deletes a selected comment by their ID, returns with nothing",
     "queries": [],
     "exampleResponse" : {}
-  }
+}
 }
