@@ -293,7 +293,7 @@ describe('PATCH articles', ()=>{
   test('ERROR: 400, responds with an error when vote is not a number', ()=>{
     const newVote = {inc_vote: 'six'}
     return request(app)
-    .patch('/api/articles/wow')
+    .patch('/api/articles/1')
     .send(newVote)
     .expect(400)
     .then(({body})=>{
@@ -303,7 +303,7 @@ describe('PATCH articles', ()=>{
   test('ERROR: 400, responds with an error when no information has been given', ()=>{
     const newVote = {}
     return request(app)
-    .patch('/api/articles/wow')
+    .patch('/api/articles/4')
     .send(newVote)
     .expect(400)
     .then(({body})=>{
