@@ -6,7 +6,7 @@ const {
   customErrors,
   psqlErrors,
 } = require("./errors");
-const { getsArticle, getsAllArticles, getArticleComments, postsNewComment } = require("../controllers/article-controller");
+const { getsArticle, getsAllArticles, getArticleComments, postsNewComment, patchArticleVote } = require("../controllers/article-controller");
 const { getsAllApi } = require('../controllers/api-controller')
 
 const app = express();
@@ -19,6 +19,7 @@ app.get('/api/articles/:article_id/comments', getArticleComments)
 app.get('/api', getsAllApi);
 
 app.get('/api/articles', getsAllArticles);
+app.patch('/api/articles/:article_id', patchArticleVote)
 
 
 app.post('/api/articles/:article_id/comments', postsNewComment)
