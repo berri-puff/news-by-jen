@@ -89,5 +89,14 @@
     "description": "deletes a selected comment by their ID, returns with nothing",
     "queries": [],
     "exampleResponse" : {}
+  },
+  "GET /api/users": {
+    "description": "serves an array of all the users",
+    "queries": [],
+    "exampleResponse" : {
+      "username": "rogersop",
+      "name": "paul",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/24394918?s=400&v=4"
+    }
 }
 }
