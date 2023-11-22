@@ -71,5 +71,14 @@
       "votes": 0,
       "created_at" : 1604394720000
     }
+  },
+  "GET /api/users": {
+    "description": "serves an array of all the users",
+    "queries": [],
+    "exampleResponse" : {
+      "username": "rogersop",
+      "name": "paul",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/24394918?s=400&v=4"
+    }
   }
 }
