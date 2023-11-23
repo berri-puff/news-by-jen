@@ -134,7 +134,7 @@ describe("GET /api/articles/:article_id", () => {
   });
 });
 
-describe.only(" GET /api/articles", () => {
+describe(" GET /api/articles", () => {
   test("GET: 200 retrieves all the articles", () => {
     return request(app)
       .get("/api/articles")
@@ -255,6 +255,29 @@ describe.only(" GET /api/articles", () => {
       .then(({ body }) => {
         expect(body.msg).toBe("Not Found");
       });
+  })
+  test('GET: 200 when give topic and a sort_by query', ()=>{
+    return request(app)
+    .get('/api/articles?topic=mitch&sort_by=votes')
+    .expect(200)
+    .then((response)=>{
+      const { articles } = response.body;
+      expect(articles).toBeSortedBy("votes", { descending: true});
+      expect(articles).toHaveLength(12)
+      articles.forEach((article) => {
+        expect(article).toMatchObject({
+          article_id: expect.any(Number),
+          author: expect.any(String),
+          title: expect.any(String),
+          topic: 'mitch',
+          created_at: expect.any(String),
+          votes: expect.any(Number),
+          article_img_url: expect.any(String),
+        });
+        expect(article.hasOwnProperty("body")).toBe(false);
+        expect(article).hasOwnProperty("comment_count");
+      });
+    })
   })
 });
 

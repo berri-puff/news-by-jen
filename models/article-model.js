@@ -20,8 +20,8 @@ exports.selectAllArticles = (topic, validTopics, sort_by = 'created_at', order =
   if ((topic && !validTopics.includes(topic)) || (sort_by && !validSorts.includes(sort_by))) {
     return Promise.reject({ status: 404, msg: "Not Found" });
   } 
-  else if (topic && validTopics.includes(topic)) {
-    queryString += `WHERE topic = $1 GROUP BY articles.article_id ORDER BY articles.created_at DESC;`;
+  else if ((topic && sort_by) && (validTopics.includes(topic) && validSorts.includes(sort_by))) {
+    queryString += `WHERE topic = $1 GROUP BY articles.article_id ORDER BY articles.${sort_by} ${order};`;
     return db.query(queryString, [topic]).then(({ rows }) => {
       return rows;
     });
