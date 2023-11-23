@@ -9,7 +9,7 @@ const {
 const { getsArticle, getsAllArticles, getArticleComments, postsNewComment, patchArticleVote } = require("../controllers/article-controller");
 const { getsAllApi } = require('../controllers/api-controller');
 const { deletesComment } = require("../controllers/comments-controller");
-const { getsUsers } = require("../controllers/user-controller");
+const { getsUsers, getUserInfo } = require("../controllers/user-controller");
 
 const app = express();
 app.use(express.json())
@@ -20,6 +20,7 @@ app.get('/api/articles/:article_id/comments', getArticleComments)
 app.get('/api', getsAllApi);
 app.get('/api/articles', getsAllArticles);
 app.get('/api/users', getsUsers)
+app.get('/api/users/:username', getUserInfo)
 
 app.patch('/api/articles/:article_id', patchArticleVote)
 
