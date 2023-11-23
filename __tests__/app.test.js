@@ -444,4 +444,20 @@ describe.only('GET username /api/users/:username', ()=>{
       })
     })
   })
+  test('ERROR: 404 responds with an error when gived a username that does not exist on the database', ()=>{
+    return request(app)
+    .get('/api/users/lander_vis')
+    .expect(404)
+    .then(({body})=>{
+      expect(body.msg).toBe('Not Found')
+    })
+  })
+  test('ERROR: 400 responds with an error when an invalid endpoint is given', ()=>{
+    return request(app)
+    .get('/api/no-users/butter_bridge')
+    .expect(400)
+    .then(({body})=>{
+      expect(body.msg).toBe('Bad Request')
+    })
+  })
 })
