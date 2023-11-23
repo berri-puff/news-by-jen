@@ -10,8 +10,6 @@ const {
 } = require("../db/data/test-data/index");
 const endpoints = require("../endpoints.json");
 
-
-
 beforeEach(() => {
   return seed({ articleData, commentData, topicData, userData });
 });
@@ -94,6 +92,46 @@ describe("GET /api/articles/:article_id", () => {
         expect(body.msg).toBe("Bad Request");
       });
   });
+  test("GET: 200 responds with the selected article and the total number of comments for that article by the selected id", () => {
+    return request(app)
+      .get("/api/articles/9")
+      .expect(200)
+      .then((response) => {
+        const { article } = response.body;
+        expect(article).toMatchObject({
+          article_id: 9,
+          title: "They're not exactly dogs, are they?",
+          topic: "mitch",
+          author: "butter_bridge",
+          body: "Well? Think about it.",
+          comment_counts: "2",
+          created_at: expect.any(String),
+          votes: expect.any(Number),
+          article_img_url:
+            "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
+        });
+      });
+  });
+  test("GET: 200 responds with the selected article with comment count even if there are no comments for the selected article by id", () => {
+    return request(app)
+      .get("/api/articles/4")
+      .expect(200)
+      .then((response) => {
+        const { article } = response.body;
+        expect(article).toMatchObject({
+          article_id: 4,
+          title: "Student SUES Mitch!",
+          topic: "mitch",
+          author: "rogersop",
+          body: "We all love Mitch and his wonderful, unique typing style. However, the volume of his typing has ALLEGEDLY burst another students eardrums, and they are now suing for damages",
+          created_at: expect.any(String),
+          votes: expect.any(Number),
+          comment_counts: '0',
+          article_img_url:
+            "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
+        });
+      });
+  });
 });
 
 describe(" GET /api/articles", () => {
@@ -117,7 +155,6 @@ describe(" GET /api/articles", () => {
           });
           expect(piece.hasOwnProperty("body")).toBe(false);
           expect(piece).hasOwnProperty("comment_count");
-
         });
       });
   });
@@ -152,23 +189,22 @@ describe("GET: /api/articles/:article_id/comments", () => {
         expect(body.msg).toBe("Not Found");
       });
   });
-  test('GET: 200 responds when an empty array when article_id exists but no comments has been made', ()=>{
+  test("GET: 200 responds when an empty array when article_id exists but no comments has been made", () => {
     return request(app)
-    .get('/api/articles/2/comments')
-    .expect(200)
-    .then(({body})=>{
-
-      expect(body.comments).toEqual([])
-    })
-  })
-  test('ERROR: 400 responds with error message when trying to access by an invalid endpoint', ()=>{
+      .get("/api/articles/2/comments")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.comments).toEqual([]);
+      });
+  });
+  test("ERROR: 400 responds with error message when trying to access by an invalid endpoint", () => {
     return request(app)
-    .get('/api/articles/invalid/comments').
-    expect(400)
-    .then(({body})=>{
-      expect(body.msg).toBe('Bad Request')
-    })
-  })
+      .get("/api/articles/invalid/comments")
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Bad Request");
+      });
+  });
 });
 
 describe("Post: api/articles/:article_id/comments", () => {
@@ -193,164 +229,165 @@ describe("Post: api/articles/:article_id/comments", () => {
         });
       });
   });
-  test('ERROR: 400 responds with an error when the request body does not have all the required information', ()=>{
-    const invalidComment = { username: 'rogersop'}
+  test("ERROR: 400 responds with an error when the request body does not have all the required information", () => {
+    const invalidComment = { username: "rogersop" };
     return request(app)
-    .post('/api/articles/5/comments')
-    .send(invalidComment)
-    .expect(400).then(({body}) =>{
-      expect(body.msg).toBe('Bad Request')
-    })
-  })
-  test('ERROR: 404 responds with an error message when comment is being added to a valid but non-existent article', ()=>{
+      .post("/api/articles/5/comments")
+      .send(invalidComment)
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Bad Request");
+      });
+  });
+  test("ERROR: 404 responds with an error message when comment is being added to a valid but non-existent article", () => {
     const newComment = {
       username: "icellusedkars",
       body: "Contents are not worth reading",
     };
     return request(app)
-    .post('/api/articles/46/comments')
-    .send(newComment)
-    .expect(404).then(({body})=>{
-      expect(body.msg).toBe('Not Found')
-    })
-  })
-  test('ERROR: 400 responds with an error message when trying to add comment to an invalid endpoint', ()=>{
+      .post("/api/articles/46/comments")
+      .send(newComment)
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Not Found");
+      });
+  });
+  test("ERROR: 400 responds with an error message when trying to add comment to an invalid endpoint", () => {
     const newComment = {
       username: "icellusedkars",
       body: "Contents are not worth reading",
     };
     return request(app)
-    .post('/api/articles/mouse/comments')
-    .send(newComment).
-    expect(400)
-    .then(({body})=>{
-      expect(body.msg).toBe('Bad Request')
-    })
-  })
+      .post("/api/articles/mouse/comments")
+      .send(newComment)
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Bad Request");
+      });
+  });
 });
 
-describe('PATCH articles', ()=>{
-  test('PATCH: 200, increases vote by article_id', ()=>{
-    const newVote = {inc_votes: 5}
+describe("PATCH articles", () => {
+  test("PATCH: 200, increases vote by article_id", () => {
+    const newVote = { inc_votes: 5 };
     return request(app)
-    .patch('/api/articles/10')
-    .send(newVote)
-    .expect(200)
-    .then((response)=>{
-      const {article} = response.body
-      expect(article).toMatchObject({
-        article_id : 10,
-        title: 'Seven inspirational thought leaders from Manchester UK',
-        topic: 'mitch',
-        author: 'rogersop',
-        body: "Who are we kidding, there is only one, and it's Mitch!",
-        created_at : expect.any(String),
-        votes: 5,
-        article_img_url: 'https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700'
-      })
-    })
-  })
-  test('PATCH: 200 decreases the vote by article ID', ()=>{
-    const newVote = {inc_votes: -4}
+      .patch("/api/articles/10")
+      .send(newVote)
+      .expect(200)
+      .then((response) => {
+        const { article } = response.body;
+        expect(article).toMatchObject({
+          article_id: 10,
+          title: "Seven inspirational thought leaders from Manchester UK",
+          topic: "mitch",
+          author: "rogersop",
+          body: "Who are we kidding, there is only one, and it's Mitch!",
+          created_at: expect.any(String),
+          votes: 5,
+          article_img_url:
+            "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
+        });
+      });
+  });
+  test("PATCH: 200 decreases the vote by article ID", () => {
+    const newVote = { inc_votes: -4 };
     return request(app)
-    .patch('/api/articles/1')
-    .send(newVote)
-    .expect(200)
-    .then((response)=>{
-      const {article} = response.body
-      expect(article).toMatchObject({
-        article_id : 1,
-        title: "Living in the shadow of a great man",
-        topic: "mitch",
-        author: "butter_bridge",
-        body: "I find this existence challenging",
-        created_at: expect.any(String),
-        votes: 96,
-        article_img_url:
-          "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700"
-      })
-    })
-  })
-  test('ERROR: 404 responds with an error when trying to decrease the vote to non-existing article (decrease)', ()=>{
-    const newVote = {inc_votes: -4}
+      .patch("/api/articles/1")
+      .send(newVote)
+      .expect(200)
+      .then((response) => {
+        const { article } = response.body;
+        expect(article).toMatchObject({
+          article_id: 1,
+          title: "Living in the shadow of a great man",
+          topic: "mitch",
+          author: "butter_bridge",
+          body: "I find this existence challenging",
+          created_at: expect.any(String),
+          votes: 96,
+          article_img_url:
+            "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
+        });
+      });
+  });
+  test("ERROR: 404 responds with an error when trying to decrease the vote to non-existing article (decrease)", () => {
+    const newVote = { inc_votes: -4 };
     return request(app)
-    .patch('/api/articles/45')
-    .send(newVote)
-    .expect(404)
-    .then(({body})=>{
-      expect(body.msg).toBe('Not Found')
-    })
-  })
-  test('ERROR: 400 responds with error if patching to an invalid path', ()=>{
-    const newVote = {inc_vote: 45}
+      .patch("/api/articles/45")
+      .send(newVote)
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Not Found");
+      });
+  });
+  test("ERROR: 400 responds with error if patching to an invalid path", () => {
+    const newVote = { inc_vote: 45 };
     return request(app)
-    .patch('/api/articles/wow')
-    .send(newVote)
-    .expect(400)
-    .then(({body})=>{
-      expect(body.msg).toBe('Bad Request')
-    })
-  })
-  test('ERROR: 400, responds with an error when vote is not a number', ()=>{
-    const newVote = {inc_vote: 'six'}
+      .patch("/api/articles/wow")
+      .send(newVote)
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Bad Request");
+      });
+  });
+  test("ERROR: 400, responds with an error when vote is not a number", () => {
+    const newVote = { inc_vote: "six" };
     return request(app)
-    .patch('/api/articles/1')
-    .send(newVote)
-    .expect(400)
-    .then(({body})=>{
-      expect(body.msg).toBe('Bad Request')
-    })
-  })
-  test('ERROR: 400, responds with an error when no information has been given', ()=>{
-    const newVote = {}
+      .patch("/api/articles/1")
+      .send(newVote)
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Bad Request");
+      });
+  });
+  test("ERROR: 400, responds with an error when no information has been given", () => {
+    const newVote = {};
     return request(app)
-    .patch('/api/articles/4')
-    .send(newVote)
-    .expect(400)
-    .then(({body})=>{
-      expect(body.msg).toBe('Bad Request')
-    })
-  })
-})
-describe('Delete: Comments', ()=>{
-  test('DELETE: 204, deletes the comment by id', ()=>{
+      .patch("/api/articles/4")
+      .send(newVote)
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Bad Request");
+      });
+  });
+});
+describe("Delete: Comments", () => {
+  test("DELETE: 204, deletes the comment by id", () => {
+    return request(app).delete("/api/comments/7").expect(204);
+  });
+  test("ERROR: 404 responds with an error when comment_id is non-existent", () => {
     return request(app)
-    .delete('/api/comments/7')
-    .expect(204)
-  })
-  test('ERROR: 404 responds with an error when comment_id is non-existent', ()=>{
+      .delete("/api/comments/677")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Not Found");
+      });
+  });
+  test("ERROR: 400 responds with an error with endpoint is invalid", () => {
     return request(app)
-    .delete('/api/comments/677')
-    .expect(404)
-    .then(({body})=>{
-    expect(body.msg).toBe('Not Found')
-    })
-  })
-  test('ERROR: 400 responds with an error with endpoint is invalid', ()=>{
-    return request(app)
-    .delete('/api/comments/snakes')
-    .expect(400)
-    .then(({body})=>{
-    expect(body.msg).toBe('Bad Request')
-    })
-  })
-})
+      .delete("/api/comments/snakes")
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Bad Request");
+      });
+  });
+});
 
-describe('GET users', ()=>{
-  test('GET: 200, responds with an array of all users', ()=>{
+describe("GET users", () => {
+  test("GET: 200, responds with an array of all users", () => {
     return request(app)
-    .get('/api/users')
-    .expect(200)
-    .then((response)=>{
-      const {users} = response.body
-      expect(users).toHaveLength(4)
-      users.forEach((user)=>{
-        expect(user).toMatchObject({
-          username: expect.any(String),
-          name: expect.any(String),
-          avatar_url:  expect.any(String)
-        })
-      })
-    })
-  })
-})
+      .get("/api/users")
+      .expect(200)
+      .then((response) => {
+        const { users } = response.body;
+        expect(users).toHaveLength(4);
+        users.forEach((user) => {
+          expect(user).toMatchObject({
+            username: expect.any(String),
+            name: expect.any(String),
+            avatar_url: expect.any(String),
+          });
+        });
+      });
+  });
+});

@@ -98,5 +98,22 @@
       "name": "paul",
       "avatar_url": "https://avatars2.githubusercontent.com/u/24394918?s=400&v=4"
     }
+},
+"GET /api/articles/:article_id(comment_count" :{
+  "description": "serves an array containing the selected article with the comment count associated with it by article id",
+  "queries" : [],
+  "exampleResponse" : {
+    "article": {
+     " article_id": 9,
+      "title": "They're not exactly dogs, are they?",
+      "topic": "mitch",
+      "author": "butter_bridge",
+      "body": "Well? Think about it.",
+      "created_at": 1591438200000,
+    "  votes": 0,
+     " article_img_url": "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
+     " comment_counts": "2"
+    }
+  }
 }
 }
