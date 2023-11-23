@@ -26,7 +26,7 @@
     }
   },
   "GET /api/artices/:article_id": {
-    "description": "Serves an an array containing a single article as per selected ID",
+    "description": "Serves an an array containing a single article as per selected ID with comment counts",
     "queries": [],
     "exampleResponse": {
       "article": [
@@ -38,7 +38,8 @@
           "body": "some gifs",
           " created_at": 1604394720000,
           "votes" : 0,
-          "article_img_url": "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700"
+          "article_img_url": "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
+          "comment_counts": "2"
         }
       ]
     }
@@ -118,23 +119,6 @@
         "comment_count": 6
       }
     ]
-  }
-},
-"GET /api/articles/:article_id(comment_count)" :{
-  "description": "serves an array containing the selected article with the comment count associated with it by article id",
-  "queries" : [],
-  "exampleResponse" : {
-    "article": {
-     " article_id": 9,
-      "title": "They're not exactly dogs, are they?",
-      "topic": "mitch",
-      "author": "butter_bridge",
-      "body": "Well? Think about it.",
-      "created_at": 1591438200000,
-    "  votes": 0,
-     " article_img_url": "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
-     " comment_counts": "2"
-    }
   }
 }
 }
