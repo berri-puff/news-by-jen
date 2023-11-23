@@ -63,20 +63,22 @@
     "description": "adds a new comment to the article ID provided",
     "queries" : [],
     "exampleCommentToBeAdded" : { "username" : "icellusedkars", "body": "an opinion"},
-    "exampleResponse" : {
+    "exampleResponse" :{ "articles" : [
+      {
       "comment_id": 19,
       "body" : "an opinion",
       "article_id": 7,
       "author": "icellusedkars",
       "votes": 0,
       "created_at" : 1604394720000
-    }
+    }]}
   },
   "PATCH /api/articles/:article_id/comments" : {
     "description": "serves an array with an votes updates on a selected article",
     "queries" : [],
     "exampleCommentToBeAdded" : { "inc_votes" : 5},
-    "exampleResponse" : {
+    "exampleResponse" : {"article" : [
+      {
       "comment_id": 19,
       "body" : "an opinion",
       "article_id": 7,
@@ -84,6 +86,7 @@
       "votes": 5,
       "created_at" : 1604394720000
     }
+    ]} 
   },
   "DELETE /api/comments/:comment_id":{
     "description": "deletes a selected comment by their ID, returns with nothing",
@@ -93,13 +96,31 @@
   "GET /api/users": {
     "description": "serves an array of all the users",
     "queries": [],
-    "exampleResponse" : {
+    "exampleResponse" : {"user" : [
+       {
       "username": "rogersop",
       "name": "paul",
       "avatar_url": "https://avatars2.githubusercontent.com/u/24394918?s=400&v=4"
     }
+    ]}
 },
-"GET /api/articles/:article_id(comment_count" :{
+"GET /api/articles?topic=mitch": {
+  "description": "serves an array of all articles with the query topic",
+  "queries": ["mitch", "cats", "paper"],
+  "exampleResponse": {
+    "articles": [
+      { "article_id" : 2,
+        "title": "Cats are cute",
+        "topic": "cats",
+        "author": "weegembump",
+        "created_at": "2018-05-30T15:59:13.341Z",
+        "votes": 0,
+        "comment_count": 6
+      }
+    ]
+  }
+},
+"GET /api/articles/:article_id(comment_count)" :{
   "description": "serves an array containing the selected article with the comment count associated with it by article id",
   "queries" : [],
   "exampleResponse" : {
