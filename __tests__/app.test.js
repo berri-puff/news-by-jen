@@ -126,7 +126,7 @@ describe("GET /api/articles/:article_id", () => {
           body: "We all love Mitch and his wonderful, unique typing style. However, the volume of his typing has ALLEGEDLY burst another students eardrums, and they are now suing for damages",
           created_at: expect.any(String),
           votes: expect.any(Number),
-          comment_counts: '0',
+          comment_counts: "0",
           article_img_url:
             "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
         });
@@ -158,45 +158,75 @@ describe(" GET /api/articles", () => {
         });
       });
   });
-  test('QUERY: 200 responds with only the relevent articles as per query request',()=>{
+  test("QUERY: 200 responds with only the relevent articles as per query request", () => {
     return request(app)
-    .get('/api/articles?topic=cats')
-    .expect(200)
-    .then((response)=>{
-      const {articles} = response.body
-      expect(articles).toHaveLength(1)
-      articles.forEach((piece) => {
-        expect(piece).toMatchObject({
-          article_id: expect.any(Number),
-          author: expect.any(String),
-          title: expect.any(String),
-          topic: "cats",
-          created_at: expect.any(String),
-          votes: expect.any(Number),
-          article_img_url: expect.any(String),
+      .get("/api/articles?topic=cats")
+      .expect(200)
+      .then((response) => {
+        const { articles } = response.body;
+        expect(articles).toHaveLength(1);
+        articles.forEach((piece) => {
+          expect(piece).toMatchObject({
+            article_id: expect.any(Number),
+            author: expect.any(String),
+            title: expect.any(String),
+            topic: "cats",
+            created_at: expect.any(String),
+            votes: expect.any(Number),
+            article_img_url: expect.any(String),
+          });
+          expect(piece.hasOwnProperty("body")).toBe(false);
+          expect(piece).hasOwnProperty("comment_count");
         });
-        expect(piece.hasOwnProperty("body")).toBe(false);
-        expect(piece).hasOwnProperty("comment_count");
       });
-    })
-  })
-  test('QUERY: 200 returns an empty array if there is no articles but topic exists', ()=>{
+  });
+  test("QUERY: 200 returns an empty array if there is no articles but topic exists", () => {
     return request(app)
-    .get('/api/articles?topic=paper')
-    .expect(200)
-    .then(({body})=>{
-      expect(body.articles).toEqual([])
-    })
-  })
-  test('ERROR: 404 responds with an error message when query topic does not exist', ()=>{
+      .get("/api/articles?topic=paper")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.articles).toEqual([]);
+      });
+  });
+  test("ERROR: 404 responds with an error message when query topic does not exist", () => {
     return request(app)
-    .get('/api/articles?topic=dogs')
-    .expect(404)
-    .then(({body})=>{
-      expect(body.msg).toBe('Not Found')
-    })
-  })
-
+      .get("/api/articles?topic=dogs")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Not Found");
+      });
+  });
+  test("GET: 200 responds with an array of all the articles by the sort_by query in descending order", () => {
+    return request(app)
+      .get("/api/articles?sort_by=title")
+      .expect(200)
+      .then((response) => {
+        const { articles } = response.body;
+        expect(articles).toBeSortedBy("title", { descending: true });
+        articles.forEach((article) => {
+          expect(article).toMatchObject({
+            article_id: expect.any(Number),
+            author: expect.any(String),
+            title: expect.any(String),
+            topic: expect.any(String),
+            created_at: expect.any(String),
+            votes: expect.any(Number),
+            article_img_url: expect.any(String),
+          });
+          expect(article.hasOwnProperty("body")).toBe(false);
+          expect(article).hasOwnProperty("comment_count");
+        });
+      });
+  });
+  test("ERROR: 404 responds with an error when trying to sort with a non-existing column name", () => {
+    return request(app)
+      .get("/api/articles?sort_by=songs")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Not Found");
+      });
+  });
+ 
 });
 
 describe("GET: /api/articles/:article_id/comments", () => {
