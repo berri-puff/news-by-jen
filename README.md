@@ -10,7 +10,7 @@ A link to the fully hosted version can be found [here](https://hot-issue.onrende
 
 2: Once cloned, install `jest` by running `npm install --save-dev jest`.
 
-Then, install dependencies by running the command `npm install <theFollowings>`: `dotenv`, `express`, `pg` , `pg-format`, `supertest`, `jest-sorted`. Replace 'theFollowings' with one of the dependencies.
+Then, install dependencies by running the command `npm install i`.
 
 3: Ensure that your `Node.js` is at least `v17.0.0` or above and `Postgres` will need to be `pg@8.2` and above to support Node.js. 
 
@@ -18,9 +18,9 @@ Making a connection with the databases:
    
  Create two files named ```.env.test``` and ```.env.development``` and set the databases as ```PGDATABASE=nc_news_test``` and ```PGDATABASE=nc_news``` respectively in order to make the connection locally.
 
-**Seeding the data:**
+**Connecting to database locally:**
 
-Run `npm run seed` in your terminal, this should seed your data from the `test-data` folder that is stored within `db` folder
+Run `npm run setup-dbs` in your terminal, this should set the connection between your computer and the databases, which the seed will retreive data from in order to runs the tests. **ENSURE YOU HAVE SET UP THE `PGDATABASE` CORRECTLY OR IT WILL FAIL**
 
 **Running tests:**
 
