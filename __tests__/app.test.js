@@ -134,7 +134,7 @@ describe("GET /api/articles/:article_id", () => {
   });
 });
 
-describe(" GET /api/articles", () => {
+describe.only(" GET /api/articles", () => {
   test("GET: 200 retrieves all the articles", () => {
     return request(app)
       .get("/api/articles")
@@ -226,7 +226,36 @@ describe(" GET /api/articles", () => {
         expect(body.msg).toBe("Not Found");
       });
   });
- 
+  test("GET: 200 should be able to sort ascending or descending order when sort_by is not given", ()=>{
+    return request(app)
+    .get('/api/articles?order=ASC')
+    .expect(200)
+    .then((response)=>{
+      const { articles } = response.body;
+      expect(articles).toBeSortedBy("created_at", { ascending: true });
+      articles.forEach((article) => {
+        expect(article).toMatchObject({
+          article_id: expect.any(Number),
+          author: expect.any(String),
+          title: expect.any(String),
+          topic: expect.any(String),
+          created_at: expect.any(String),
+          votes: expect.any(Number),
+          article_img_url: expect.any(String),
+        });
+        expect(article.hasOwnProperty("body")).toBe(false);
+        expect(article).hasOwnProperty("comment_count");
+      });
+    })
+  })
+  test('ERROR: 404 when order query is not ASC or DESC', ()=>{
+    return request(app)
+      .get("/api/articles?sort_by=letters")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Not Found");
+      });
+  })
 });
 
 describe("GET: /api/articles/:article_id/comments", () => {
