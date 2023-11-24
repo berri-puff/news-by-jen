@@ -19,6 +19,8 @@ exports.getsArticle = (req, res, next) => {
 
 exports.getsAllArticles = (req, res, next) => {
   const { topic } = req.query;
+  const {sort_by} = req.query
+  const {order} = req.query
   selectsAllTopics()
     .then((topics) => {
       const validTopics = topics.map((topic) => {
@@ -27,7 +29,7 @@ exports.getsAllArticles = (req, res, next) => {
       return validTopics;
     })
     .then((validTopics) => {
-      selectAllArticles(topic, validTopics).then((allArticles) => {
+      selectAllArticles(topic, validTopics, sort_by, order).then((allArticles) => {
       res.status(200).send({ articles: allArticles });
     }) .catch(next);
     })
