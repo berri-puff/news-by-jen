@@ -1,4 +1,4 @@
-const db = require("../db/connection");
+const db = require(`${__dirname}/../db/connection`);
 
 exports.getArticleByID = (article_id) => {
   return db

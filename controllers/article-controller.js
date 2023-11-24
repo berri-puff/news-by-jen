@@ -1,12 +1,12 @@
-const { checkArticle } = require("../db/seeds/utils");
+const { checkArticle } = require(`${__dirname}/../db/seeds/utils`);
 const {
   getArticleByID,
   selectAllArticles,
   selectCommentByArticleID,
   insertsNewComment,
   updatesVotes,
-} = require("../models/article-model");
-const { selectsAllTopics } = require("../models/topic-model");
+} = require(`${__dirname}/../models/article-model`);
+const { selectsAllTopics } = require(`${__dirname}/../models/topic-model`);
 
 exports.getsArticle = (req, res, next) => {
   const { article_id } = req.params;
