@@ -1,5 +1,4 @@
 const express = require("express");
-const topicsRouter = require(`${__dirname}/../routes/topics-router`);
 const apiRouter = require(`${__dirname}/../routes/api-router`)
 const {
   invalidPaths,
@@ -17,11 +16,8 @@ app.use(express.json());
 
 app.use('/api', apiRouter);
 
+// app.get('/api/articles/:article_id/comments', getArticleComments)
 
-
-app.get("/api/articles/:article_id", getsArticle);
-app.get('/api/articles/:article_id/comments', getArticleComments)
-app.get('/api/articles', getsAllArticles);
 app.get('/api/users', getsUsers)
 app.get('/api/users/:username', getUserInfo)
 
