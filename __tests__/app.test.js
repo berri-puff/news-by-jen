@@ -719,3 +719,35 @@ describe('POST new article', ()=>{
     })
   })
 })
+
+describe('POST /api/topics', ()=>{
+  test('POST 200: responds with an array with the newly added topic', ()=>{
+    const newTopic = {
+      slug : "skincare",
+      description: "give me good skin"
+    }
+    return request(app)
+    .post('/api/topics')
+    .send(newTopic)
+    .expect(200)
+    .then((response)=>{
+      const {topic} = response.body
+      expect(topic).toEqual({
+        slug : "skincare",
+        description: "give me good skin"
+      })
+    })
+  })
+  test('ERROR: 400 responds with an error when trying to add a new topic without complete information', ()=>{
+    const invalidExample = {
+      description: "give me good skin"
+    }
+    return request(app)
+    .post('/api/topics')
+    .send(invalidExample)
+    .expect(400)
+    .then(({body})=>{
+      expect(body.msg).toBe('Bad Request')
+    })
+  })
+})
