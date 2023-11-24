@@ -72,5 +72,7 @@ exports.patchArticleVote = (req, res, next) => {
 
 exports.postNewArticle = (req,res,next) =>{
   const articleToAdd = req.body
-  addsNewArticle(articleToAdd)
+  addsNewArticle(articleToAdd).then((newArticle)=>{
+    res.status(200).send({article: newArticle})
+  }).catch(next)
 }

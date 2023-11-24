@@ -661,7 +661,7 @@ describe("PATCH comment by id", () => {
 });
 
 describe.only('POST new article', ()=>{
-  test.skip('POST: 200 responds with an array of the newly added article', ()=>{
+  test('POST: 200 responds with an array of the newly added article', ()=>{
     const newArticle = {
       author : 'lurker',
       title: 'Cats as your neighbour?',
@@ -684,8 +684,38 @@ describe.only('POST new article', ()=>{
         article_img_url : "https://static.wikia.nocookie.net/animalcrossing/images/e/ea/Bob_NH.png/revision/latest?cb=20200817185816",
         votes: 0,
         created_at: expect.any(String),
-        comment_count: 0
+        comment_count: '0'
       })
+    })
+  })
+  test('ERROR: 400 responds with an error when trying to add new article without complete information', ()=>{
+    const newArticle = {
+      author : 'lurker',
+      title: 'Cats as your neighbour?',
+      article_img_url : "https://static.wikia.nocookie.net/animalcrossing/images/e/ea/Bob_NH.png/revision/latest?cb=20200817185816"
+    }
+    return request(app)
+    .post('/api/articles')
+    .send(newArticle)
+    .expect(400)
+    .then(({body})=>{
+      expect(body.msg).toBe('Bad Request')
+    })
+  })
+  test('ERROR: 400 responds with an error when trying to post an article without a valid author', ()=>{
+    const newArticle = {
+      author : 'no account',
+      title: 'Cats as your neighbour?',
+      body: "In Animal Crossing: New Horizon, you CAN have cats are your neighbour on your island, my favourite is Bob, pphthppth",
+      topic: 'cats',
+      article_img_url : "https://static.wikia.nocookie.net/animalcrossing/images/e/ea/Bob_NH.png/revision/latest?cb=20200817185816"
+    }
+    return request(app)
+    .post('/api/articles')
+    .send(newArticle)
+    .expect(404)
+    .then(({body})=>{
+      expect(body.msg).toBe('Not Found')
     })
   })
 })

@@ -93,6 +93,10 @@ exports.insertsNewComment = (article_id, commentToAdd) => {
 
 exports.addsNewArticle = (articleToAdd)=>{
   const {author, title, body, topic, article_img_url} = articleToAdd
-
+return db.query(`INSERT INTO articles (author, title, topic,body, article_img_url) VALUES ($1,$2,$3, $4, $5) RETURNING article_id`, [author, title, topic, body, article_img_url]).then(({rows}) =>{
+  const addedArticleID = rows[0].article_id
+  return db.query(`SELECT articles.*, COUNT(comments.body) AS comment_count FROM articles LEFT JOIN comments ON articles.article_id = comments.article_id WHERE articles.article_id = $1 GROUP BY articles.article_id`, [addedArticleID]).then(({rows})=>{
+return rows[0]  })
+})
 
 }
