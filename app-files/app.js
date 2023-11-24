@@ -6,7 +6,6 @@ const {
   customErrors,
   psqlErrors,
 } = require(`${__dirname}/./errors`);
-const { postsNewComment, patchArticleVote, postNewArticle  } = require(`${__dirname}/../controllers/article-controller`);
 
 const { deletesComment, patchCommentVote } = require(`${__dirname}/../controllers/comments-controller`);
 
@@ -14,11 +13,6 @@ const app = express();
 app.use(express.json());
 
 app.use('/api', apiRouter);
-
-
-app.patch('/api/comments/:comment_id', patchCommentVote)
-
-app.delete('/api/comments/:comment_id', deletesComment)
 
 app.all("*", invalidPaths);
 
