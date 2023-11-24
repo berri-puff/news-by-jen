@@ -17,7 +17,7 @@ app.use(express.json());
 
 app.use('/api', apiRouter);
 
-app.use("/api/topics", topicsRouter);
+
 
 app.get("/api/articles/:article_id", getsArticle);
 app.get('/api/articles/:article_id/comments', getArticleComments)
