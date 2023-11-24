@@ -1,6 +1,6 @@
 const express = require("express");
-const apiRouter = require(`${__dirname}/../routes/api-router`);
-const { getTopics } = require(`${__dirname}/../controllers/topic-controller`);
+const topicsRouter = require(`${__dirname}/../routes/topics-router`);
+const apiRouter = require(`${__dirname}/../routes/api-router`)
 const {
   invalidPaths,
   serverErrors,
@@ -17,7 +17,8 @@ app.use(express.json());
 
 app.use('/api', apiRouter);
 
-app.get("/api/topics", getTopics);
+app.use("/api/topics", topicsRouter);
+
 app.get("/api/articles/:article_id", getsArticle);
 app.get('/api/articles/:article_id/comments', getArticleComments)
 app.get('/api/articles', getsAllArticles);
