@@ -660,7 +660,7 @@ describe("PATCH comment by id", () => {
   })
 });
 
-describe.only('POST new article', ()=>{
+describe('POST new article', ()=>{
   test('POST: 200 responds with an array of the newly added article', ()=>{
     const newArticle = {
       author : 'lurker',
