@@ -15,11 +15,10 @@ app.use(express.json());
 
 app.use('/api', apiRouter);
 
-app.patch('/api/articles/:article_id', patchArticleVote)
+
 app.patch('/api/comments/:comment_id', patchCommentVote)
 
 app.post('/api/articles/:article_id/comments', postsNewComment)
-app.post('/api/articles', postNewArticle)
 
 app.delete('/api/comments/:comment_id', deletesComment)
 
