@@ -565,7 +565,7 @@ describe('GET username /api/users/:username', ()=>{
       })
     })
   })
-  test('ERROR: 404 responds with an error when gived a username that does not exist on the database', ()=>{
+  test('ERROR: 404 responds with an error when given a username that does not exist on the database', ()=>{
     return request(app)
     .get('/api/users/lander_vis')
     .expect(404)
