@@ -1,10 +1,12 @@
+
+
 const { checkArticle } = require(`${__dirname}/../db/seeds/utils`);
 const {
   getArticleByID,
   selectAllArticles,
   selectCommentByArticleID,
   insertsNewComment,
-  updatesVotes,
+  updatesVotes,addsNewArticle
 } = require(`${__dirname}/../models/article-model`);
 const { selectsAllTopics } = require(`${__dirname}/../models/topic-model`);
 
@@ -67,3 +69,8 @@ exports.patchArticleVote = (req, res, next) => {
     })
     .catch(next);
 };
+
+exports.postNewArticle = (req,res,next) =>{
+  const articleToAdd = req.body
+  addsNewArticle(articleToAdd)
+}

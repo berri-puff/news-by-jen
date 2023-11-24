@@ -6,7 +6,7 @@ const {
   customErrors,
   psqlErrors,
 } = require(`${__dirname}/./errors`);
-const { getsArticle, getsAllArticles, getArticleComments, postsNewComment, patchArticleVote } = require(`${__dirname}/../controllers/article-controller`);
+const { getsArticle, getsAllArticles, getArticleComments, postsNewComment, patchArticleVote, postNewArticle  } = require(`${__dirname}/../controllers/article-controller`);
 const { getsAllApi } = require(`${__dirname}/../controllers/api-controller`);
 const { deletesComment, patchCommentVote } = require(`${__dirname}/../controllers/comments-controller`);
 const { getsUsers, getUserInfo } = require(`${__dirname}/../controllers/user-controller`);
@@ -26,6 +26,7 @@ app.patch('/api/articles/:article_id', patchArticleVote)
 app.patch('/api/comments/:comment_id', patchCommentVote)
 
 app.post('/api/articles/:article_id/comments', postsNewComment)
+app.post('/api/articles', postNewArticle)
 
 app.delete('/api/comments/:comment_id', deletesComment)
 

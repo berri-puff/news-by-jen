@@ -659,3 +659,33 @@ describe("PATCH comment by id", () => {
     })
   })
 });
+
+describe.only('POST new article', ()=>{
+  test.skip('POST: 200 responds with an array of the newly added article', ()=>{
+    const newArticle = {
+      author : 'lurker',
+      title: 'Cats as your neighbour?',
+      body: "In Animal Crossing: New Horizon, you CAN have cats are your neighbour on your island, my favourite is Bob, pphthppth",
+      topic: 'cats',
+      article_img_url : "https://static.wikia.nocookie.net/animalcrossing/images/e/ea/Bob_NH.png/revision/latest?cb=20200817185816"
+    }
+    return request(app)
+    .post('/api/articles')
+    .send(newArticle)
+    .expect(200)
+    .then((response) =>{
+      const {article} = response.body
+      expect(article).toMatchObject({
+        article_id: expect.any(Number),
+        author : 'lurker',
+        title: 'Cats as your neighbour?',
+        body: "In Animal Crossing: New Horizon, you CAN have cats are your neighbour on your island, my favourite is Bob, pphthppth",
+        topic: 'cats',
+        article_img_url : "https://static.wikia.nocookie.net/animalcrossing/images/e/ea/Bob_NH.png/revision/latest?cb=20200817185816",
+        votes: 0,
+        created_at: expect.any(String),
+        comment_count: 0
+      })
+    })
+  })
+})

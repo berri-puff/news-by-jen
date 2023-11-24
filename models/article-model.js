@@ -90,3 +90,9 @@ exports.insertsNewComment = (article_id, commentToAdd) => {
       return rows[0];
     });
 };
+
+exports.addsNewArticle = (articleToAdd)=>{
+  const {author, title, body, topic, article_img_url} = articleToAdd
+
+
+}
