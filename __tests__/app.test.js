@@ -134,7 +134,7 @@ describe("GET /api/articles/:article_id", () => {
   });
 });
 
-describe(" GET /api/articles", () => {
+describe.only(" GET /api/articles", () => {
   test("GET: 200 retrieves all the articles", () => {
     return request(app)
       .get("/api/articles")
@@ -279,7 +279,46 @@ describe(" GET /api/articles", () => {
       });
     })
   })
+  test('GET 200: responds with an array of articles whe given a topic, a sort_by and an order query', ()=>{
+  return request(app)
+  .get('/api/articles?topic=mitch&sort_by=author&order=ASC')
+  .expect(200)
+  .then((response)=>{
+    const { articles } = response.body;
+    expect(articles).toBeSortedBy("author", { ascending: true});
+    expect(articles).toHaveLength(12)
+    articles.forEach((article) => {
+      expect(article).toMatchObject({
+        article_id: expect.any(Number),
+        author: expect.any(String),
+        title: expect.any(String),
+        topic: 'mitch',
+        created_at: expect.any(String),
+        votes: expect.any(Number),
+        article_img_url: expect.any(String),
+      });
+      expect(article.hasOwnProperty("body")).toBe(false);
+      expect(article).hasOwnProperty("comment_count");
+    });
+  })
 });
+test('GET: 200 responds with an empty array when the queries are all valid but there are no articles with the associated topic', ()=>{
+  return request(app)
+.get('/api/articles?topic=paper&sort_by=title&order=ASC')
+.expect(200)
+.then(({body})=>{
+  expect(body.articles).toEqual([])
+})
+})
+test('ERROR: 404 when topic or sort_by query is an invalid query', ()=>{
+  return request(app)
+  .get('/api/articles?topic=laptops&sort_by=title&order=ASC')
+  .expect(404)
+  .then(({body})=>{
+    expect(body.msg).toEqual('Not Found')
+  })
+})
+})
 
 describe("GET: /api/articles/:article_id/comments", () => {
   test("GET: 200, responds with an array of comments in ascending order by the article_id", () => {
@@ -511,4 +550,4 @@ describe("GET users", () => {
         });
       });
   });
-});
+})
