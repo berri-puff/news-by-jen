@@ -14,5 +14,5 @@ exports.patchCommentVote = (req,res,next) =>{
     const {comment_id} = req.params
 patchCommentVoteById(inc_votes, comment_id).then((updatedComment)=>{
 res.status(200).send({comment: updatedComment})
-})
+}).catch(next)
 }

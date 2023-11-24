@@ -618,4 +618,44 @@ describe.only("PATCH comment by id", () => {
         });
       });
   })
+  test('ERROR: 404 responds with an error when trying to patch comment vote with a valid but non-existent comment_id', ()=>{
+    const newVote = { inc_votes: 456 };
+    return request(app)
+    .patch('/api/comments/65')
+    .send(newVote)
+    .expect(404)
+    .then(({body})=>{
+      expect(body.msg).toBe('Not Found')
+    })
+  })
+  test('ERROR: 400 responds with an error when trying to patch comment votes with an invalid endpoint', ()=>{
+    const newVote = { inc_votes: 6};
+    return request(app)
+    .patch('/api/comments/no-comment')
+    .send(newVote)
+    .expect(400)
+    .then(({body})=>{
+      expect(body.msg).toBe('Bad Request')
+    })
+  })
+  test('ERROR: 400 responds with error when new vote does not include the required information', ()=>{
+    const invalidVote = {}
+    return request(app)
+    .patch('/api/comments/4')
+    .send(invalidVote)
+    .expect(400)
+    .then(({body})=>{
+      expect(body.msg).toBe('Bad Request')
+    })
+  })
+  test('ERROR: 400 responds with error when new vote contains invalid votes', ()=>{
+    const invalidVote = {inc_votes: 'minus 4'}
+    return request(app)
+    .patch('/api/comments/4')
+    .send(invalidVote)
+    .expect(400)
+    .then(({body})=>{
+      expect(body.msg).toBe('Bad Request')
+    })
+  })
 });
