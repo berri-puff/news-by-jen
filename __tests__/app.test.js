@@ -551,3 +551,34 @@ describe("GET users", () => {
       });
   });
 })
+
+describe('GET username /api/users/:username', ()=>{
+  test('GET: 200 responds with an array with the selected username and their info', ()=>{
+    return request(app)
+    .get('/api/users/butter_bridge')
+    .expect(200)
+    .then(({body})=>{
+      expect(body.user).toMatchObject({
+        username: expect.any(String),
+        name: expect.any(String),
+        avatar_url: expect.any(String)
+      })
+    })
+  })
+  test('ERROR: 404 responds with an error when given a username that does not exist on the database', ()=>{
+    return request(app)
+    .get('/api/users/lander_vis')
+    .expect(404)
+    .then(({body})=>{
+      expect(body.msg).toBe('Not Found')
+    })
+  })
+  test('ERROR: 400 responds with an error when an invalid endpoint is given', ()=>{
+    return request(app)
+    .get('/api/no-users/butter_bridge')
+    .expect(400)
+    .then(({body})=>{
+      expect(body.msg).toBe('Bad Request')
+    })
+  })
+})
