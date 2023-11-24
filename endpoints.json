@@ -188,5 +188,21 @@
         }
       ]
     }
+  },
+  "POST /api/topics": {
+    "description": "serves an array with the newly added topic",
+    "queries": [],
+    "examplNewTopicToAdd": {
+      "slug": "animal crossing",
+      "description": "animals crossing a road"
+    },
+    "exampleResponse" : {
+      "topic" : [
+        {
+          "slug": "animal crossing",
+          "description": "animals crossing a road"
+        }
+      ]
+    }
   }
 }
