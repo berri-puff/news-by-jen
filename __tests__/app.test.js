@@ -583,7 +583,7 @@ describe("GET username /api/users/:username", () => {
   });
 });
 
-describe.only("PATCH comment by id", () => {
+describe("PATCH comment by id", () => {
   test("GET: 200 responds with the array of comment by the id with votes increased", () => {
     const newVote = { inc_votes: 57 };
     return request(app)
