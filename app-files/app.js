@@ -7,8 +7,6 @@ const {
   psqlErrors,
 } = require(`${__dirname}/./errors`);
 
-const { deletesComment, patchCommentVote } = require(`${__dirname}/../controllers/comments-controller`);
-
 const app = express();
 app.use(express.json());
 
