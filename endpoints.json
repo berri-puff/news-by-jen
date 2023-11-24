@@ -26,7 +26,7 @@
       ]
     }
   },
-  "GET /api/artices/:article_id": {
+  "GET /api/articles/:article_id": {
     "description": "Serves an an array containing a single article as per selected ID with comment counts",
     "queries": [],
     "exampleResponse": {
@@ -45,8 +45,8 @@
       ]
     }
   },
-  "GET /api/articles:acrticle_id/comments": {
-    "description": "serves an array containing all the comments by the selected article ID",
+  "GET /api/articles/:article_id/comments" : {
+    "description" : "serves an array containing all the comments by the selected article ID",
     "queries": [],
     "exampleResponse": {
       "article": [

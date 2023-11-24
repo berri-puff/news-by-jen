@@ -1,12 +1,12 @@
-const { checkArticle } = require("../db/seeds/utils");
+const { checkArticle } = require(`${__dirname}/../db/seeds/utils`);
 const {
   getArticleByID,
   selectAllArticles,
   selectCommentByArticleID,
   insertsNewComment,
   updatesVotes,
-} = require("../models/article-model");
-const { selectsAllTopics } = require("../models/topic-model");
+} = require(`${__dirname}/../models/article-model`);
+const { selectsAllTopics } = require(`${__dirname}/../models/topic-model`);
 
 exports.getsArticle = (req, res, next) => {
   const { article_id } = req.params;
@@ -19,6 +19,8 @@ exports.getsArticle = (req, res, next) => {
 
 exports.getsAllArticles = (req, res, next) => {
   const { topic } = req.query;
+  const {sort_by} = req.query
+  const {order} = req.query
   selectsAllTopics()
     .then((topics) => {
       const validTopics = topics.map((topic) => {
@@ -27,7 +29,7 @@ exports.getsAllArticles = (req, res, next) => {
       return validTopics;
     })
     .then((validTopics) => {
-      selectAllArticles(topic, validTopics).then((allArticles) => {
+      selectAllArticles(topic, validTopics, sort_by, order).then((allArticles) => {
       res.status(200).send({ articles: allArticles });
     }) .catch(next);
     })

@@ -1,4 +1,4 @@
-const { selectsAllTopics } = require("../models/topic-model")
+const { selectsAllTopics } = require(`${__dirname}/../models/topic-model`)
 
 exports.getTopics = (req,res)=>{
     selectsAllTopics().then((response) =>{

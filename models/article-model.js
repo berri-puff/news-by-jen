@@ -1,4 +1,4 @@
-const db = require("../db/connection");
+const db = require(`${__dirname}/../db/connection`);
 
 exports.getArticleByID = (article_id) => {
   return db
@@ -12,16 +12,34 @@ exports.getArticleByID = (article_id) => {
 
 };
 
-exports.selectAllArticles = (topic, validTopics) => {
+exports.selectAllArticles = (topic, validTopics, sort_by = 'created_at', order = 'DESC') => {
   let queryString = `SELECT articles.article_id, articles.author, articles.title, articles.topic, articles.created_at, articles.votes, articles.article_img_url, COUNT(comments.body) AS comment_counts FROM articles LEFT JOIN comments ON articles.article_id = comments.article_id `;
-  if (topic && !validTopics.includes(topic)) {
+  const validSorts = ['article_id', 'author', 'title', 'topic', 'created_at', 'votes']
+  const validOrder = ['ASC', 'DESC']
+
+  if ((topic && !validTopics.includes(topic)) || (sort_by && !validSorts.includes(sort_by))) {
     return Promise.reject({ status: 404, msg: "Not Found" });
-  } else if (topic && validTopics.includes(topic)) {
-    queryString += `WHERE topic = $1 GROUP BY articles.article_id ORDER BY articles.created_at DESC`;
+  } 
+  else if ((topic && sort_by) && (validTopics.includes(topic) && validSorts.includes(sort_by))) {
+    queryString += `WHERE topic = $1 GROUP BY articles.article_id ORDER BY articles.${sort_by} ${order};`;
     return db.query(queryString, [topic]).then(({ rows }) => {
       return rows;
     });
-  } else {
+  } 
+  else if (order && validOrder.includes(order) ){
+    queryString += `GROUP BY articles.article_id ORDER BY articles.${sort_by} ${order};`
+    return db.query(queryString).then(({ rows }) => {
+      return rows;
+    });
+  }
+  else if (sort_by && validSorts.includes(sort_by)){
+    queryString += `GROUP BY articles.article_id ORDER BY articles.${sort_by} ${order};`
+    return db.query(queryString).then(({ rows }) => {
+      return rows;
+    });
+  }
+
+  else {
     queryString += `GROUP BY articles.article_id ORDER BY articles.created_at DESC`;
     return db.query(queryString).then(({ rows }) => {
       return rows;
