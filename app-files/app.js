@@ -1,4 +1,5 @@
 const express = require("express");
+const apiRouter = require(`${__dirname}/../routes/api-router`);
 const { getTopics } = require(`${__dirname}/../controllers/topic-controller`);
 const {
   invalidPaths,
@@ -7,14 +8,15 @@ const {
   psqlErrors,
 } = require(`${__dirname}/./errors`);
 const { getsArticle, getsAllArticles, getArticleComments, postsNewComment, patchArticleVote, postNewArticle  } = require(`${__dirname}/../controllers/article-controller`);
-const { getsAllApi } = require(`${__dirname}/../controllers/api-controller`);
+
 const { deletesComment, patchCommentVote } = require(`${__dirname}/../controllers/comments-controller`);
 const { getsUsers, getUserInfo } = require(`${__dirname}/../controllers/user-controller`);
 
 const app = express();
 app.use(express.json());
 
-app.get('/api', getsAllApi);
+app.use('/api', apiRouter);
+
 app.get("/api/topics", getTopics);
 app.get("/api/articles/:article_id", getsArticle);
 app.get('/api/articles/:article_id/comments', getArticleComments)
