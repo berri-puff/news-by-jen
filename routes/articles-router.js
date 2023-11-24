@@ -1,5 +1,4 @@
-
-const { getsAllArticles, getsArticle, getArticleComments, patchArticleVote, postNewArticle} = require(`${__dirname}/../controllers/article-controller`)
+const { getsAllArticles, getsArticle, getArticleComments, patchArticleVote, postNewArticle, postsNewComment} = require(`${__dirname}/../controllers/article-controller`)
 
 const articlesRouter = require('express').Router()
 
@@ -11,6 +10,8 @@ articlesRouter.route('/:article_id')
 .get( getsArticle)
 .patch(patchArticleVote)
 
-articlesRouter.get('/:article_id/comments', getArticleComments);
+articlesRouter.route('/:article_id/comments')
+.get(getArticleComments)
+.post(postsNewComment)
 
 module.exports = articlesRouter

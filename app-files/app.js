@@ -18,8 +18,6 @@ app.use('/api', apiRouter);
 
 app.patch('/api/comments/:comment_id', patchCommentVote)
 
-app.post('/api/articles/:article_id/comments', postsNewComment)
-
 app.delete('/api/comments/:comment_id', deletesComment)
 
 app.all("*", invalidPaths);
