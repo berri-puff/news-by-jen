@@ -8,7 +8,7 @@ const {
 } = require(`${__dirname}/./errors`);
 const { getsArticle, getsAllArticles, getArticleComments, postsNewComment, patchArticleVote } = require(`${__dirname}/../controllers/article-controller`);
 const { getsAllApi } = require(`${__dirname}/../controllers/api-controller`);
-const { deletesComment } = require(`${__dirname}/../controllers/comments-controller`);
+const { deletesComment, patchCommentVote } = require(`${__dirname}/../controllers/comments-controller`);
 const { getsUsers, getUserInfo } = require(`${__dirname}/../controllers/user-controller`);
 
 const app = express();
@@ -23,6 +23,7 @@ app.get('/api/users', getsUsers)
 app.get('/api/users/:username', getUserInfo)
 
 app.patch('/api/articles/:article_id', patchArticleVote)
+app.patch('/api/comments/:comment_id', patchCommentVote)
 
 app.post('/api/articles/:article_id/comments', postsNewComment)
 
