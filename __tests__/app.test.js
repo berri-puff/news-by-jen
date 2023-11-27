@@ -134,7 +134,7 @@ describe("GET /api/articles/:article_id", () => {
   });
 });
 
-describe(" GET /api/articles", () => {
+describe.only(" GET /api/articles", () => {
   test("GET: 200 retrieves all the articles", () => {
     return request(app)
       .get("/api/articles")
@@ -158,7 +158,7 @@ describe(" GET /api/articles", () => {
         });
       });
   });
-  test("QUERY: 200 responds with only the relevent articles as per query request", () => {
+  test("QUERY: 200 responds with only the relevent articles by topics", () => {
     return request(app)
       .get("/api/articles?topic=cats")
       .expect(200)
@@ -196,7 +196,7 @@ describe(" GET /api/articles", () => {
         expect(body.msg).toBe("Not Found");
       });
   });
-  test("GET: 200 responds with an array of all the articles by the sort_by query in descending order", () => {
+  test("QUERY: 200 responds with an array of all the articles by the sort_by query in descending order", () => {
     return request(app)
       .get("/api/articles?sort_by=title")
       .expect(200)
@@ -226,7 +226,7 @@ describe(" GET /api/articles", () => {
         expect(body.msg).toBe("Not Found");
       });
   });
-  test("GET: 200 should be able to sort ascending or descending order when sort_by is not given", () => {
+  test("QUERY: 200 should be able to sort ascending or descending order when sort_by is not given", () => {
     return request(app)
       .get("/api/articles?order=ASC")
       .expect(200)
@@ -256,7 +256,7 @@ describe(" GET /api/articles", () => {
         expect(body.msg).toBe("Not Found");
       });
   });
-  test("GET: 200 when give topic and a sort_by query", () => {
+  test("QUERY: 200 when given a topic and a sort_by query", () => {
     return request(app)
       .get("/api/articles?topic=mitch&sort_by=votes")
       .expect(200)
@@ -279,7 +279,7 @@ describe(" GET /api/articles", () => {
         });
       });
   });
-  test("GET 200: responds with an array of articles whe given a topic, a sort_by and an order query", () => {
+  test("QUERY 200: responds with an array of articles when given a topic, a sort_by and an order query", () => {
     return request(app)
       .get("/api/articles?topic=mitch&sort_by=author&order=ASC")
       .expect(200)
@@ -302,7 +302,7 @@ describe(" GET /api/articles", () => {
         });
       });
   });
-  test("GET: 200 responds with an empty array when the queries are all valid but there are no articles with the associated topic", () => {
+  test("QUERY: 200 responds with an empty array when the queries are all valid but there are no articles with the associated topic", () => {
     return request(app)
       .get("/api/articles?topic=paper&sort_by=title&order=ASC")
       .expect(200)
@@ -511,6 +511,7 @@ describe("PATCH articles", () => {
       });
   });
 });
+
 describe("Delete: Comments", () => {
   test("DELETE: 204, deletes the comment by id", () => {
     return request(app).delete("/api/comments/7").expect(204);
