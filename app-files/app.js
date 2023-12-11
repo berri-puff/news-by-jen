@@ -6,7 +6,8 @@ const {
   customErrors,
   psqlErrors,
 } = require(`${__dirname}/./errors`);
-
+const cors = require('cors');
+app.use(cors());
 const app = express();
 app.use(express.json());
 
