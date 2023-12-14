@@ -14,7 +14,7 @@ exports.getArticleByID = (article_id) => {
 
 exports.selectAllArticles = (topic, validTopics, sort_by = 'created_at', order = 'DESC') => {
   let queryString = `SELECT articles.article_id, articles.author, articles.title, articles.topic, articles.created_at, articles.votes, articles.article_img_url, COUNT(comments.body) AS comment_counts FROM articles LEFT JOIN comments ON articles.article_id = comments.article_id `;
-  const validSorts = ['article_id', 'author', 'title', 'topic', 'created_at', 'votes']
+  const validSorts = ['article_id', 'author', 'title', 'topic', 'created_at', 'votes', 'comment_count']
   const validOrder = ['ASC', 'DESC']
 
   if ((topic && !validTopics.includes(topic)) || (sort_by && !validSorts.includes(sort_by))) {
